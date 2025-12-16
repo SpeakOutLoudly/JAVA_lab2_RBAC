@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- Console appender for operational logs -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-    
-    <!-- File appender for operational/debug logs -->
+
+    <!-- 运行日志文件 - 按天滚动 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/rbac.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -18,15 +12,50 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    
-    <!-- Root logger -->
+
+    <!-- 审计日志文件 - 按天滚动，保留1年 -->
+    <appender name="AUDIT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/audit.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/audit.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 错误日志文件 - 按天滚动 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger - 只输出到运行日志 -->
     <root level="INFO">
         <appender-ref ref="FILE" />
+        <appender-ref ref="ERROR_FILE" />
     </root>
-    
-    <!-- Application logger - set to DEBUG for development -->
+
+    <!-- 应用日志 - 输出到运行日志和错误日志 -->
     <logger name="com.study" level="INFO" additivity="false">
         <appender-ref ref="FILE" />
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ERROR_FILE" />
+    </logger>
+
+    <!-- 审计日志专用 - 只输出到审计日志文件 -->
+    <logger name="com.study.audit" level="INFO" additivity="false">
+        <appender-ref ref="AUDIT_FILE" />
     </logger>
 </configuration>

@@ -15,3 +15,38 @@
 2025-12-16 13:49:29.761 [main] INFO  com.study.service.BootstrapService - System already initialized
 2025-12-16 13:49:42.600 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
 2025-12-16 13:49:42.829 [main] INFO  com.study.service.AuthService - Audit: LOGIN - User - SUCCESS
+2025-12-16 15:51:28.418 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-16 15:51:28.486 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-16 15:51:28.716 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-16 15:51:41.990 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
+2025-12-16 15:51:42.217 [main] INFO  com.study.service.AuthService - Audit: LOGIN - User - SUCCESS
+2025-12-16 15:56:08.744 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-16 15:56:08.791 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-16 15:56:09.025 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-16 15:56:44.575 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
+2025-12-16 15:56:44.805 [main] INFO  com.study.service.AuthService - Audit: LOGIN - User - SUCCESS
+2025-12-16 15:57:24.658 [main] INFO  com.study.service.UserService - User created: test
+2025-12-16 15:57:24.879 [main] INFO  com.study.service.UserService - Audit: CREATE_USER - User - SUCCESS
+2025-12-16 15:57:44.568 [main] INFO  com.study.service.UserService - Audit: LIST_USERS - User - SUCCESS
+2025-12-16 17:06:58.628 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-16 17:06:58.678 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-16 17:06:58.906 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-16 17:08:47.010 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-16 17:08:47.054 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-16 17:08:47.295 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-16 17:08:57.577 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
+2025-12-16 17:08:57.809 [main] INFO  com.study.service.AuthService - Audit: LOGIN - User - SUCCESS
+2025-12-16 17:12:29.961 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-16 17:12:30.179 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-16 17:12:30.400 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-16 17:15:58.765 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-16 17:15:58.989 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-16 17:15:59.215 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-16 17:16:07.259 [main] WARN  com.study.service.AuthService - Audit: LOGIN - User - FAILED: Invalid password
+2025-12-16 17:16:16.581 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
+2025-12-16 17:16:16.797 [main] INFO  com.study.service.AuthService - Audit: LOGIN - User - SUCCESS
+2025-12-16 17:24:21.937 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-16 17:24:21.987 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-16 17:24:22.216 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-16 17:27:23.949 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
+2025-12-16 17:27:24.171 [main] INFO  com.study.service.AuthService - Audit: LOGIN - User - SUCCESS
