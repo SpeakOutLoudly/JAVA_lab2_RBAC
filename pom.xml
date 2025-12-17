@@ -15,11 +15,11 @@
     </properties>
 
     <dependencies>
-        <!-- H2 Database for JDBC -->
+        <!-- MySQL Database Driver -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.2.224</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.2.0</version>
         </dependency>
         
         <!-- SLF4J for logging -->

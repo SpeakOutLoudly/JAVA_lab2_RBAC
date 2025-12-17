@@ -9,13 +9,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Database connection manager using H2
+ * Database connection manager using MySQL
  */
 public class DatabaseConnection {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
-    private static final String DEFAULT_DB_URL = "jdbc:h2:./data/rbac;MODE=MySQL";
-    private static final String DB_USER = "sa";
-    private static final String DB_PASSWORD = "";
+    private static final String DEFAULT_DB_URL = "jdbc:mysql://localhost:3306/campus_trade"
+            + "?useSSL=false&allowPublicKeyRetrieval=true"
+            + "&useUnicode=true&characterEncoding=UTF-8"
+            + "&serverTimezone=Asia/Shanghai";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "123456";
     
     private static DatabaseConnection instance;
     private final String dbUrl;
@@ -66,8 +69,8 @@ public class DatabaseConnection {
                 salt VARCHAR(255) NOT NULL,
                 enabled BOOLEAN DEFAULT TRUE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """);
         
         // Roles table
@@ -78,7 +81,7 @@ public class DatabaseConnection {
                 name VARCHAR(100) NOT NULL,
                 description VARCHAR(255),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """);
         
         // Resources table
@@ -90,7 +93,7 @@ public class DatabaseConnection {
                 type VARCHAR(50) NOT NULL,
                 url VARCHAR(255),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """);
         
         // Permissions table
@@ -103,7 +106,7 @@ public class DatabaseConnection {
                 resource_id BIGINT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (resource_id) REFERENCES resources(id)
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """);
         
         // User-Role mapping
@@ -115,7 +118,7 @@ public class DatabaseConnection {
                 PRIMARY KEY (user_id, role_id),
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                 FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """);
         
         // Role-Permission mapping
@@ -127,7 +130,7 @@ public class DatabaseConnection {
                 PRIMARY KEY (role_id, permission_id),
                 FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
                 FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """);
         
         stmt.execute("""
@@ -140,18 +143,9 @@ public class DatabaseConnection {
                 scope_key VARCHAR(100) NOT NULL DEFAULT '__GLOBAL__',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
-                FOREIGN KEY (permission_code) REFERENCES permissions(code) ON DELETE CASCADE
-            )
-        """);
-
-        stmt.execute("""
-            ALTER TABLE role_permission_scopes
-            ADD COLUMN IF NOT EXISTS scope_key VARCHAR(100) NOT NULL DEFAULT '__GLOBAL__'
-        """);
-        
-        stmt.execute("""
-            CREATE UNIQUE INDEX IF NOT EXISTS uq_role_permission_scope
-            ON role_permission_scopes(role_id, permission_code, resource_type, scope_key)
+                FOREIGN KEY (permission_code) REFERENCES permissions(code) ON DELETE CASCADE,
+                UNIQUE KEY uq_role_permission_scope (role_id, permission_code, resource_type, scope_key)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """);
         
         // Audit logs
@@ -168,7 +162,7 @@ public class DatabaseConnection {
                 error_message TEXT,
                 ip_address VARCHAR(50),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """);
     }
     

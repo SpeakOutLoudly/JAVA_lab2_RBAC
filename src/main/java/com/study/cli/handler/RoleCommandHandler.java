@@ -30,7 +30,7 @@ public class RoleCommandHandler implements CommandHandler {
         String description = InputUtils.readInput("Description (optional): ");
 
         Role role = facade.createRole(code, name, description.isBlank() ? null : description);
-        System.out.println("✔ Role created: " + role.getCode());
+        System.out.println("[SUCCESS] Role created: " + role.getCode());
     }
 
     private void handleListRoles(RbacFacade facade) {
@@ -44,7 +44,7 @@ public class RoleCommandHandler implements CommandHandler {
         String roleCode = InputUtils.readInput("Role code: ");
 
         facade.assignRoleToUser(username, roleCode);
-        System.out.println("✔ Role assigned to user.");
+        System.out.println("[SUCCESS] Role assigned to user.");
     }
 
     private void handleRemoveRole(RbacFacade facade) {
@@ -52,7 +52,7 @@ public class RoleCommandHandler implements CommandHandler {
         String roleCode = InputUtils.readInput("Role code: ");
 
         facade.removeRoleFromUser(username, roleCode);
-        System.out.println("✔ Role removed from user.");
+        System.out.println("[SUCCESS] Role removed from user.");
     }
 
     private void handleUpdateRole(RbacFacade facade) {
@@ -63,7 +63,7 @@ public class RoleCommandHandler implements CommandHandler {
         Role role = facade.updateRole(roleId,
                 name.isBlank() ? null : name,
                 description.isBlank() ? null : description);
-        System.out.println("✔ Role updated: " + role.getCode());
+        System.out.println("[SUCCESS] Role updated: " + role.getCode());
     }
 
     private void handleDeleteRole(RbacFacade facade) {
@@ -71,7 +71,7 @@ public class RoleCommandHandler implements CommandHandler {
         String confirm = InputUtils.readInput("Confirm delete? (yes/no): ");
         if ("yes".equalsIgnoreCase(confirm)) {
             facade.deleteRole(roleId);
-            System.out.println("✔ Role deleted.");
+            System.out.println("[SUCCESS] Role deleted.");
         } else {
             System.out.println("Delete cancelled.");
         }

@@ -424,3 +424,9 @@ org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "    CREA
 2025-12-17 15:08:46.594 [main] ERROR com.study.service.UserService - Failed to execute operation, action=CREATE_USER, resourceType=User, resourceId=test, error=Transaction failed
 2025-12-17 16:41:54.577 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
 2025-12-17 17:18:05.287 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=1, error=Role not found: 1
+2025-12-17 19:34:29.107 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-17 19:49:38.965 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-17 20:57:45.822 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-17 21:17:31.782 [main] ERROR com.study.service.UserService - Failed to execute operation, action=CREATE_USER, resourceType=User, resourceId=test, error=Transaction failed
+2025-12-17 21:25:51.098 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=test, error=User not found: test
+2025-12-17 21:34:15.725 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=VIEW_PERMISSION, resourceType=Permission, resourceId=1, error=Permission not found: 1

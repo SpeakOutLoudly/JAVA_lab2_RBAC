@@ -26,7 +26,7 @@ public class AuthCommandHandler implements CommandHandler {
 
     private void handleLogout(RbacFacade facade) {
         facade.logout();
-        System.out.println("✔ Logged out.");
+        System.out.println("[SUCCESS] Logged out.");
     }
 
     private void handleChangePassword(RbacFacade facade) {
@@ -40,7 +40,7 @@ public class AuthCommandHandler implements CommandHandler {
         }
 
         facade.changePassword(oldPassword, newPassword);
-        System.out.println("✔ Password updated.");
+        System.out.println("[SUCCESS] Password updated.");
     }
 
     private void handleViewProfile(RbacFacade facade) {

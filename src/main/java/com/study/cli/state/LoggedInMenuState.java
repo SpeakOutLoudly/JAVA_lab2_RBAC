@@ -8,10 +8,11 @@ import com.study.facade.RbacFacade;
 import java.util.*;
 
 /**
- * Logged in menu state.
+ * Logged in menu state - number-based hierarchical menu navigation.
  */
 public class LoggedInMenuState implements MenuState {
     private final Map<String, CommandHandler> handlers = new HashMap<>();
+    private String currentSubMenu = null; // null = main menu, otherwise submenu name
 
     public LoggedInMenuState() {
         CommandHandler authHandler = new AuthCommandHandler();
@@ -30,11 +31,11 @@ public class LoggedInMenuState implements MenuState {
         handlers.put("view-user", userHandler);
         handlers.put("delete-user", userHandler);
         handlers.put("update-user", userHandler);
+        handlers.put("assign-role", roleHandler);
+        handlers.put("remove-role", roleHandler);
 
         handlers.put("create-role", roleHandler);
         handlers.put("list-roles", roleHandler);
-        handlers.put("assign-role", roleHandler);
-        handlers.put("remove-role", roleHandler);
         handlers.put("update-role", roleHandler);
         handlers.put("delete-role", roleHandler);
 
@@ -63,82 +64,210 @@ public class LoggedInMenuState implements MenuState {
 
     @Override
     public void displayMenu(RbacFacade facade) {
-        User currentUser = facade.getCurrentUser();
-        System.out.println("\n===== Main Menu =====");
-        System.out.println("Logged in as: " + currentUser.getUsername());
-        System.out.println();
-
-        List<CommandSpec> commands = facade.getAvailableCommands().stream()
-                .filter(c -> !"login".equals(c.getCommand())) // 登录态菜单不显示 login
-                .toList();
-
-        // 先把命令分组（你也可以改成"显式映射表"，更可控）
-        Map<String, List<CommandSpec>> groups = new LinkedHashMap<>();
-        groups.put("User", new ArrayList<>());
-        groups.put("Role", new ArrayList<>());
-        groups.put("Permission", new ArrayList<>());
-        groups.put("Resource", new ArrayList<>());
-        groups.put("Audit", new ArrayList<>());
-        groups.put("Account", new ArrayList<>());
-        groups.put("System", new ArrayList<>());
-
-        for (CommandSpec c : commands) {
-            String cmd = c.getCommand();
-            if ("exit".equals(cmd) || "logout".equals(cmd)) {
-                groups.get("System").add(c);
-            } else if (cmd.contains("audit")) {
-                groups.get("Audit").add(c);
-            } else if (cmd.contains("resource") || cmd.contains("resources")) {
-                groups.get("Resource").add(c);
-            } else if (cmd.contains("permission")) {
-                groups.get("Permission").add(c);
-            } else if (cmd.contains("role") && !cmd.contains("assign-role") && !cmd.contains("remove-role")) {
-                groups.get("Role").add(c);
-            } else if (cmd.contains("user") || cmd.contains("users") || "assign-role".equals(cmd) || "remove-role".equals(cmd)) {
-                groups.get("User").add(c);
-            } else if (cmd.contains("profile") || cmd.contains("password")) {
-                groups.get("Account").add(c);
-            } else {
-                // 兜底：不认识的命令放系统或单独 Unknown
-                groups.get("System").add(c);
-            }
+        if (currentSubMenu == null) {
+            displayMainMenu(facade);
+        } else {
+            displaySubMenu(currentSubMenu, facade);
         }
-
-        // 排序：同组内按命令名排序（也可按 create/list/view/update/delete 自定义顺序）
-        for (List<CommandSpec> list : groups.values()) {
-            list.sort(Comparator.comparing(CommandSpec::getCommand));
-        }
-
-        // 计算命令列宽：按所有命令最长值 + padding，对齐更整齐
-        int cmdWidth = commands.stream()
-                .mapToInt(c -> c.getCommand().length())
-                .max()
-                .orElse(16);
-        cmdWidth = Math.max(cmdWidth, 16) + 2; // 至少 16，留 2 个空格
-
-        for (var entry : groups.entrySet()) {
-            List<CommandSpec> list = entry.getValue();
-            if (list.isEmpty()) continue;
-
-            System.out.println("[" + entry.getKey() + "]");
-            for (CommandSpec c : list) {
-                // 两列：命令列固定宽度，描述列自然换行（不截断）
-                System.out.printf("  %-" + cmdWidth + "s%s%n", c.getCommand(), c.getDescription());
-            }
-            System.out.println();
-        }
-
-        System.out.println("=====================\n");
     }
 
+    private void displayMainMenu(RbacFacade facade) {
+        User currentUser = facade.getCurrentUser();
+        System.out.println("\n========== 主菜单 ==========");
+        System.out.println("当前用户: " + currentUser.getUsername());
+        System.out.println();
+        System.out.println("1. 用户管理");
+        System.out.println("2. 角色管理");
+        System.out.println("3. 权限管理");
+        System.out.println("4. 资源管理");
+        System.out.println("5. 审计查询");
+        System.out.println("6. 账户管理");
+        System.out.println("0. 退出登录");
+        System.out.println("==========================");
+    }
+
+    private void displaySubMenu(String menuName, RbacFacade facade) {
+        System.out.println("\n========== " + menuName + " ==========");
+        
+        Map<Integer, String> menuItems = getSubMenuItems(menuName, facade);
+        for (Map.Entry<Integer, String> entry : menuItems.entrySet()) {
+            System.out.println(entry.getKey() + ". " + entry.getValue());
+        }
+        System.out.println("0. 返回上级菜单");
+        System.out.println("==========================");
+    }
+
+    private Map<Integer, String> getSubMenuItems(String menuName, RbacFacade facade) {
+        // 获取所有可能的菜单项
+        List<String> allCommands = new ArrayList<>();
+        
+        switch (menuName) {
+            case "用户管理" -> {
+                allCommands.add("创建用户 (create-user)");
+                allCommands.add("查看用户列表 (list-users)");
+                allCommands.add("查看用户详情 (view-user)");
+                allCommands.add("修改用户 (update-user)");
+                allCommands.add("删除用户 (delete-user)");
+                allCommands.add("分配角色 (assign-role)");
+                allCommands.add("移除角色 (remove-role)");
+            }
+            case "角色管理" -> {
+                allCommands.add("创建角色 (create-role)");
+                allCommands.add("查看角色列表 (list-roles)");
+                allCommands.add("修改角色 (update-role)");
+                allCommands.add("删除角色 (delete-role)");
+            }
+            case "权限管理" -> {
+                allCommands.add("创建权限 (create-permission)");
+                allCommands.add("查看权限列表 (list-permissions)");
+                allCommands.add("查看我的权限 (list-my-permissions)");
+                allCommands.add("修改权限 (update-permission)");
+                allCommands.add("删除权限 (delete-permission)");
+                allCommands.add("分配权限到角色 (assign-permission)");
+                allCommands.add("移除角色权限 (remove-permission)");
+                allCommands.add("分配资源权限 (assign-resource-permission)");
+                allCommands.add("移除资源权限 (remove-resource-permission)");
+            }
+            case "资源管理" -> {
+                allCommands.add("创建资源 (create-resource)");
+                allCommands.add("查看资源列表 (list-resources)");
+                allCommands.add("查看资源详情 (view-resource)");
+                allCommands.add("修改资源 (update-resource)");
+                allCommands.add("删除资源 (delete-resource)");
+            }
+            case "审计查询" -> {
+                allCommands.add("查看我的审计日志 (view-audit)");
+                allCommands.add("查看所有审计日志 (view-all-audit)");
+                allCommands.add("按用户查询 (view-user-audit)");
+                allCommands.add("按操作查询 (view-action-audit)");
+                allCommands.add("按资源查询 (view-resource-audit)");
+            }
+            case "账户管理" -> {
+                allCommands.add("查看个人信息 (view-profile)");
+                allCommands.add("修改密码 (change-password)");
+            }
+        }
+        
+        // 过滤出用户有权限的命令，并重新编号
+        Map<Integer, String> items = new LinkedHashMap<>();
+        int index = 1;
+        for (String commandItem : allCommands) {
+            String command = extractCommand(commandItem);
+            if (command != null && facade.canExecuteCommand(command)) {
+                items.put(index++, commandItem);
+            }
+        }
+        
+        return items;
+    }
+    
+    private String extractCommand(String item) {
+        // 从 "创建用户 (create-user)" 中提取 "create-user"
+        int startIdx = item.indexOf("(");
+        int endIdx = item.indexOf(")");
+        if (startIdx != -1 && endIdx != -1) {
+            return item.substring(startIdx + 1, endIdx);
+        }
+        return null;
+    }
+
+    private String getCommandByMenuItem(String menuName, int choice, RbacFacade facade) {
+        Map<Integer, String> items = getSubMenuItems(menuName, facade);
+        String item = items.get(choice);
+        if (item == null) return null;
+        
+        return extractCommand(item);
+    }
 
     @Override
-    public void handleCommand(String command, RbacFacade facade) {
-        CommandHandler handler = handlers.get(command.toLowerCase());
-        if (handler != null) {
-            handler.handle(command.toLowerCase(), facade);
-        } else {
-            System.out.println("Unknown command: " + command);
+    public MenuState handleMenuChoice(String input, RbacFacade facade) {
+        try {
+            int choice = Integer.parseInt(input);
+            
+            if (currentSubMenu == null) {
+                // 在主菜单
+                return handleMainMenuChoice(choice, facade);
+            } else {
+                // 在子菜单
+                return handleSubMenuChoice(choice, facade);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("[错误] 请输入有效的数字");
+            return null;
         }
+    }
+
+    private MenuState handleMainMenuChoice(int choice, RbacFacade facade) {
+        switch (choice) {
+            case 1 -> {
+                currentSubMenu = "用户管理";
+                return null;
+            }
+            case 2 -> {
+                currentSubMenu = "角色管理";
+                return null;
+            }
+            case 3 -> {
+                currentSubMenu = "权限管理";
+                return null;
+            }
+            case 4 -> {
+                currentSubMenu = "资源管理";
+                return null;
+            }
+            case 5 -> {
+                currentSubMenu = "审计查询";
+                return null;
+            }
+            case 6 -> {
+                currentSubMenu = "账户管理";
+                return null;
+            }
+            case 0 -> {
+                // 退出登录
+                CommandHandler handler = handlers.get("logout");
+                if (handler != null) {
+                    handler.handle("logout", facade);
+                }
+                return new GuestMenuState();
+            }
+            default -> {
+                System.out.println("[错误] 无效的选择，请输入 0-6");
+                return null;
+            }
+        }
+    }
+
+    private MenuState handleSubMenuChoice(int choice, RbacFacade facade) {
+        if (choice == 0) {
+            // 返回主菜单
+            currentSubMenu = null;
+            return null;
+        }
+
+        String command = getCommandByMenuItem(currentSubMenu, choice, facade);
+        if (command != null) {
+            // 二次权限校验（安全必须，即使菜单已过滤）
+            if (!facade.canExecuteCommand(command)) {
+                CommandSpec spec = CommandSpec.fromCommand(command);
+                String requiredPerm = spec != null && spec.getRequiredPermission() != null 
+                    ? spec.getRequiredPermission() 
+                    : "未知权限";
+                System.out.println("[错误] Permission denied: " + command.toUpperCase().replace("-", "_") 
+                    + " (required: " + requiredPerm + ")");
+                return null;
+            }
+            
+            CommandHandler handler = handlers.get(command);
+            if (handler != null) {
+                handler.handle(command, facade);
+            } else {
+                System.out.println("[错误] 未找到命令处理器: " + command);
+            }
+        } else {
+            System.out.println("[错误] 无效的选择");
+        }
+
+        return null; // 留在当前子菜单
     }
 }

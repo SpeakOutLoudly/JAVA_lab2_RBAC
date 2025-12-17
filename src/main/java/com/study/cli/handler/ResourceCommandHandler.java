@@ -30,7 +30,7 @@ public class ResourceCommandHandler implements CommandHandler {
         String url = InputUtils.readInput("Resource url (optional): ");
 
         Resource resource = facade.createResource(code, name, type, url.isBlank() ? null : url);
-        System.out.println("✔ Resource created: " + resource.getCode());
+        System.out.println("[SUCCESS] Resource created: " + resource.getCode());
     }
 
     private void handleListResources(RbacFacade facade) {
@@ -62,7 +62,7 @@ public class ResourceCommandHandler implements CommandHandler {
                 name.isBlank() ? null : name,
                 type.isBlank() ? null : type,
                 url.isBlank() ? null : url);
-        System.out.println("✔ Resource updated: " + resource.getCode());
+        System.out.println("[SUCCESS] Resource updated: " + resource.getCode());
     }
 
     private void handleDeleteResource(RbacFacade facade) {
@@ -70,7 +70,7 @@ public class ResourceCommandHandler implements CommandHandler {
         String confirm = InputUtils.readInput("Confirm delete? (yes/no): ");
         if ("yes".equalsIgnoreCase(confirm)) {
             facade.deleteResource(resourceId);
-            System.out.println("✔ Resource deleted");
+            System.out.println("[SUCCESS] Resource deleted");
         } else {
             System.out.println("Delete cancelled.");
         }

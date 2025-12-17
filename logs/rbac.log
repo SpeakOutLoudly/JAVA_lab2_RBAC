@@ -571,3 +571,60 @@ org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "    CREA
 2025-12-17 17:56:56.176 [main] INFO  com.study.service.UserService - User created: test
 2025-12-17 17:57:00.198 [main] INFO  com.study.service.AuthService - User logged out: admin
 2025-12-17 17:57:06.024 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 7
+2025-12-17 19:34:20.132 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-17 19:34:20.351 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-17 19:34:20.580 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-17 19:34:29.107 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-17 19:46:13.002 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-17 19:46:13.052 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-17 19:46:13.289 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-17 19:49:38.965 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-17 19:49:45.787 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
+2025-12-17 19:50:02.449 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-17 19:50:08.302 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 7
+2025-12-17 20:37:11.049 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-17 20:37:11.132 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-17 20:37:11.380 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-17 20:57:45.822 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-17 20:57:59.295 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
+2025-12-17 21:13:27.291 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-17 21:13:27.364 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-17 21:13:27.610 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-17 21:15:04.020 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
+2025-12-17 21:17:31.782 [main] ERROR com.study.service.UserService - Failed to execute operation, action=CREATE_USER, resourceType=User, resourceId=test, error=Transaction failed
+2025-12-17 21:17:55.673 [main] INFO  com.study.service.UserService - User deleted: test
+2025-12-17 21:23:32.419 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-17 21:23:32.477 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-17 21:23:32.713 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-17 21:23:41.164 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
+2025-12-17 21:24:18.457 [main] INFO  com.study.service.UserService - User created: test2
+2025-12-17 21:25:41.127 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-17 21:25:51.098 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=test, error=User not found: test
+2025-12-17 21:26:01.977 [main] INFO  com.study.service.AuthService - User logged in: test2, permissions loaded: 7
+2025-12-17 21:26:17.493 [main] WARN  com.study.service.PermissionService - User test2 attempted unauthorized action: CREATE_PERMISSION
+2025-12-17 21:32:48.816 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-17 21:32:49.042 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-17 21:32:49.271 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-17 21:32:56.207 [main] INFO  com.study.service.AuthService - User logged in: test2, permissions loaded: 7
+2025-12-17 21:33:45.576 [main] INFO  com.study.service.AuthService - User logged out: test2
+2025-12-17 21:33:49.969 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
+2025-12-17 21:34:15.725 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=VIEW_PERMISSION, resourceType=Permission, resourceId=1, error=Permission not found: 1
+2025-12-17 21:34:30.089 [main] INFO  com.study.service.PermissionService - Permission 1 assigned to role 2
+2025-12-17 21:34:36.285 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-17 21:34:45.346 [main] INFO  com.study.service.AuthService - User logged in: test2, permissions loaded: 8
+2025-12-17 22:16:45.509 [main] INFO  c.s.repository.DatabaseConnection - No default data found, will be initialized on first run
+2025-12-17 22:16:45.509 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-17 22:16:45.523 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-17 22:16:45.796 [main] INFO  com.study.service.BootstrapService - Created role: ADMIN
+2025-12-17 22:16:45.807 [main] INFO  com.study.service.BootstrapService - Created role: USER
+2025-12-17 22:16:46.068 [main] INFO  com.study.service.BootstrapService - Created admin user
+2025-12-17 22:16:46.068 [main] INFO  com.study.service.BootstrapService - System initialized successfully
+2025-12-17 22:16:46.068 [main] INFO  com.study.service.BootstrapService - Default admin user: admin / admin123
+2025-12-17 22:17:01.490 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
+2025-12-17 22:17:10.635 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-17 22:22:48.353 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-17 22:22:48.372 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-17 22:22:48.386 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-17 22:35:39.886 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-17 22:35:39.912 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-17 22:35:39.924 [main] INFO  com.study.service.BootstrapService - System already initialized

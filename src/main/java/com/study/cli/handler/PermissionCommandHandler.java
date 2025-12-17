@@ -34,7 +34,7 @@ public class PermissionCommandHandler implements CommandHandler {
         String description = InputUtils.readInput("Description (optional): ");
 
         Permission permission = facade.createPermission(code, name, description.isBlank() ? null : description);
-        System.out.println("✔ Permission created: " + permission.getCode());
+        System.out.println("[SUCCESS] Permission created: " + permission.getCode());
     }
 
     private void handleListPermissions(RbacFacade facade) {
@@ -72,7 +72,7 @@ public class PermissionCommandHandler implements CommandHandler {
                 name.isBlank() ? null : name,
                 description.isBlank() ? null : description,
                 resourceId);
-        System.out.println("✔ Permission updated: " + permission.getCode());
+        System.out.println("[SUCCESS] Permission updated: " + permission.getCode());
     }
 
     private void handleDeletePermission(RbacFacade facade) {
@@ -80,7 +80,7 @@ public class PermissionCommandHandler implements CommandHandler {
         String confirm = InputUtils.readInput("Confirm delete? (yes/no): ");
         if ("yes".equalsIgnoreCase(confirm)) {
             facade.deletePermission(code);
-            System.out.println("✔ Permission deleted");
+            System.out.println("[SUCCESS] Permission deleted");
         } else {
             System.out.println("Delete cancelled.");
         }
@@ -91,7 +91,7 @@ public class PermissionCommandHandler implements CommandHandler {
         String permissionCode = InputUtils.readInput("Permission code: ");
 
         facade.assignPermissionToRole(roleCode, permissionCode);
-        System.out.println("✔ Permission assigned.");
+        System.out.println("[SUCCESS] Permission assigned.");
     }
 
     private void handleRemovePermission(RbacFacade facade) {
@@ -99,7 +99,7 @@ public class PermissionCommandHandler implements CommandHandler {
         String permissionCode = InputUtils.readInput("Permission code: ");
 
         facade.removePermissionFromRole(roleCode, permissionCode);
-        System.out.println("✔ Permission removed.");
+        System.out.println("[SUCCESS] Permission removed.");
     }
 
     private void handleAssignScopedPermission(RbacFacade facade) {
@@ -109,7 +109,7 @@ public class PermissionCommandHandler implements CommandHandler {
         String resourceId = InputUtils.readInput("Resource ID (blank for all within type): ");
 
         facade.assignScopedPermission(roleCode, permissionCode, resourceType, resourceId.isBlank() ? null : resourceId);
-        System.out.println("✔ Scoped permission assigned.");
+        System.out.println("[SUCCESS] Scoped permission assigned.");
     }
 
     private void handleRemoveScopedPermission(RbacFacade facade) {
@@ -119,7 +119,7 @@ public class PermissionCommandHandler implements CommandHandler {
         String resourceId = InputUtils.readInput("Resource ID (blank for all within type): ");
 
         facade.removeScopedPermission(roleCode, permissionCode, resourceType, resourceId.isBlank() ? null : resourceId);
-        System.out.println("✔ Scoped permission removed.");
+        System.out.println("[SUCCESS] Scoped permission removed.");
     }
 
     @SuppressWarnings("unused")

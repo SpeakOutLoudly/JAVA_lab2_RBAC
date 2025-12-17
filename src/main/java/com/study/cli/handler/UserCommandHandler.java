@@ -34,7 +34,7 @@ public class UserCommandHandler implements CommandHandler {
                 ? facade.createUser(username, password)
                 : facade.createUserWithRole(username, password, roleCode);
 
-        System.out.println("✔ User created: " + user.getUsername());
+        System.out.println("[SUCCESS] User created: " + user.getUsername());
     }
 
     private void handleListUsers(RbacFacade facade) {
@@ -74,7 +74,7 @@ public class UserCommandHandler implements CommandHandler {
         String confirm = InputUtils.readInput("Confirm delete user? (yes/no): ");
         if ("yes".equalsIgnoreCase(confirm)) {
             facade.deleteUser(userId);
-            System.out.println("✔ User deleted.");
+            System.out.println("[SUCCESS] User deleted.");
         } else {
             System.out.println("Delete cancelled.");
         }
@@ -92,15 +92,15 @@ public class UserCommandHandler implements CommandHandler {
             case "1" -> {
                 String newPassword = InputUtils.readPassword("New password: ");
                 facade.resetPassword(userId, newPassword);
-                System.out.println("✔ Password reset.");
+                System.out.println("[SUCCESS] Password reset.");
             }
             case "2" -> {
                 facade.enableUser(userId);
-                System.out.println("✔ User enabled.");
+                System.out.println("[SUCCESS] User enabled.");
             }
             case "3" -> {
                 facade.disableUser(userId);
-                System.out.println("✔ User disabled.");
+                System.out.println("[SUCCESS] User disabled.");
             }
             default -> System.out.println("Invalid option.");
         }
