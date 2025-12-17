@@ -12,6 +12,7 @@ import java.sql.SQLException;
  */
 public abstract class BaseRepository {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger auditLogger = LoggerFactory.getLogger("com.study.audit");
     protected final DatabaseConnection dbConnection;
     
     public BaseRepository(DatabaseConnection dbConnection) {

@@ -17,15 +17,24 @@ public class LoggedInMenuState implements MenuState {
     
     public LoggedInMenuState() {
         // Register command handlers
+        // Auth commands
         handlers.put("logout", new AuthCommandHandler());
         handlers.put("change-password", new AuthCommandHandler());
         handlers.put("view-profile", new AuthCommandHandler());
+
+        // User commands
         handlers.put("create-user", new UserCommandHandler());
         handlers.put("list-users", new UserCommandHandler());
         handlers.put("view-user", new UserCommandHandler());
+        handlers.put("delete-user", new UserCommandHandler());
+        handlers.put("update-user", new UserCommandHandler());
+        // Role commands
         handlers.put("assign-role", new RoleCommandHandler());
         handlers.put("list-roles", new RoleCommandHandler());
+        // Permission commands
         handlers.put("list-permissions", new PermissionCommandHandler());
+        // MyRole
+        //
     }
     @Override
     public void displayMenu(RbacFacade facade) {

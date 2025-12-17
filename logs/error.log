@@ -1,0 +1,1 @@
+2025-12-17 00:00:53.198 [main] ERROR com.study.service.UserService - Failed to execute operation, action=CREATE_USER, resourceType=User, resourceId=test, error=Username already exists: test

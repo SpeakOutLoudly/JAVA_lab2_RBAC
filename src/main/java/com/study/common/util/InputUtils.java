@@ -16,7 +16,15 @@ public class InputUtils {
         System.out.print(prompt);
         return scanner.nextLine().trim();
     }
-    
+
+    /**
+     * Read a number from user
+     */
+    public static long readLong(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLong();
+    }
+
     /**
      * Read password from user (attempts to hide input if console is available)
      */

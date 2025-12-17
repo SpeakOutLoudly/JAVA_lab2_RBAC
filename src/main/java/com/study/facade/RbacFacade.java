@@ -90,6 +90,10 @@ public class RbacFacade {
     public void deleteUser(Long userId) {
         userService.deleteUser(userId);
     }
+
+    public void resetPassword(Long userId, String newPassword) {
+        userService.resetPassword(userId, newPassword);
+    }
     
     // Role operations
     public List<Role> listRoles() {

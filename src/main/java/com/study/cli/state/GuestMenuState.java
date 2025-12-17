@@ -14,7 +14,6 @@ public class GuestMenuState implements MenuState {
         System.out.println("\n" + "═══════ 访客菜单 ═══════");
         System.out.println("  login  - 用户登录");
         System.out.println("  exit   - 退出系统");
-        System.out.println("  list  - 查看指令");
         System.out.println("═══════════════════════════");
     }
     
@@ -32,6 +31,6 @@ public class GuestMenuState implements MenuState {
         String password = InputUtils.readPassword("password: ");
         
         User user = facade.login(username, password);
-        System.out.println("\n✓ 登录成功！欢迎, " + user.getUsername());
+        System.out.println("\n✓ 登录成功！欢迎, " + user.getUsername() + ", 可用过 list 查看指令");
     }
 }

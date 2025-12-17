@@ -84,7 +84,7 @@ public class PermissionRepository extends BaseRepository {
             throw new RuntimeException("Failed to find permission", e);
         }
     }
-    
+    //TODO:增加根据用户的分权和加权
     public List<Permission> findAll() {
         String sql = "SELECT * FROM permissions ORDER BY created_at DESC";
         List<Permission> permissions = new ArrayList<>();
