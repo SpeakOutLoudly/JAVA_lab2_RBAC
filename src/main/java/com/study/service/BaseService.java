@@ -15,6 +15,7 @@ import java.util.function.Supplier;
  */
 public abstract class BaseService {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger auditLogger = LoggerFactory.getLogger("com.study.audit");
     protected final SessionContext sessionContext;
     protected final AuditLogRepository auditLogRepository;
     
@@ -54,6 +55,9 @@ public abstract class BaseService {
             return result;
         } catch (Exception e) {
             // Step 4: Failure audit
+            logger.error("Failed to execute operation, action={}, resourceType={}, resourceId={}, error={}"
+                    ,action, resourceType, resourceId, e.getMessage());
+
             auditFailure(action, resourceType, resourceId, e.getMessage());
             throw e;
         }
@@ -124,9 +128,12 @@ public abstract class BaseService {
      * Audit successful operation
      */
     protected void auditSuccess(String action, String resourceType, String resourceId, String detail) {
+        String username = sessionContext.isLoggedIn() ? sessionContext.getCurrentUser().getUsername() : "anonymous";
+        Long userId = sessionContext.isLoggedIn() ? sessionContext.getCurrentUser().getId() : null;
+        
         AuditLog log = new AuditLog(
-                sessionContext.isLoggedIn() ? sessionContext.getCurrentUser().getId() : null,
-                sessionContext.isLoggedIn() ? sessionContext.getCurrentUser().getUsername() : "anonymous",
+                userId,
+                username,
                 action,
                 resourceType,
                 resourceId,
@@ -135,16 +142,22 @@ public abstract class BaseService {
                 null
         );
         auditLogRepository.save(log);
-        logger.info("Audit: {} - {} - SUCCESS", action, resourceType);
+        
+        // 审计日志：结构化输出到独立文件
+        auditLogger.info("ACTION={} | RESOURCE_TYPE={} | RESOURCE_ID={} | USER={} | USER_ID={} | RESULT=SUCCESS",
+                action, resourceType, resourceId != null ? resourceId : "N/A", username, userId);
     }
     
     /**
      * Audit failed operation
      */
     protected void auditFailure(String action, String resourceType, String resourceId, String errorMessage) {
+        String username = sessionContext.isLoggedIn() ? sessionContext.getCurrentUser().getUsername() : "anonymous";
+        Long userId = sessionContext.isLoggedIn() ? sessionContext.getCurrentUser().getId() : null;
+        
         AuditLog log = new AuditLog(
-                sessionContext.isLoggedIn() ? sessionContext.getCurrentUser().getId() : null,
-                sessionContext.isLoggedIn() ? sessionContext.getCurrentUser().getUsername() : "anonymous",
+                userId,
+                username,
                 action,
                 resourceType,
                 resourceId,
@@ -153,6 +166,9 @@ public abstract class BaseService {
                 errorMessage
         );
         auditLogRepository.save(log);
-        logger.warn("Audit: {} - {} - FAILED: {}", action, resourceType, errorMessage);
+        
+        // 审计日志：结构化输出到独立文件
+        auditLogger.warn("ACTION={} | RESOURCE_TYPE={} | RESOURCE_ID={} | USER={} | USER_ID={} | RESULT=FAILED | ERROR={}",
+                action, resourceType, resourceId != null ? resourceId : "N/A", username, userId, errorMessage);
     }
 }
