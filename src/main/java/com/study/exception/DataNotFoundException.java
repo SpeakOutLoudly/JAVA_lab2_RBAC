@@ -1,9 +1,9 @@
 package com.study.exception;
 
 /**
- * Exception thrown when data is not found
+ * Exception thrown when data is not found.
  */
-public class DataNotFoundException extends RbacException {
+public class DataNotFoundException extends DataAccessException {
     public DataNotFoundException(String message) {
         super(message);
     }

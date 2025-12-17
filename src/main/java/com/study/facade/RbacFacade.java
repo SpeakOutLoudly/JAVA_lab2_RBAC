@@ -2,9 +2,13 @@ package com.study.facade;
 
 import com.study.config.CommandSpec;
 import com.study.context.SessionContext;
+import com.study.domain.AuditLog;
 import com.study.domain.Permission;
+import com.study.domain.Resource;
 import com.study.domain.Role;
+import com.study.domain.ScopedPermission;
 import com.study.domain.User;
+import com.study.exception.DataNotFoundException;
 import com.study.repository.*;
 import com.study.service.*;
 
@@ -18,6 +22,10 @@ public class RbacFacade {
     private final SessionContext sessionContext;
     private final AuthService authService;
     private final UserService userService;
+    private final RoleService roleService;
+    private final PermissionService permissionService;
+    private final AuditService auditService;
+    private final ResourceService resourceService;
     private final AuditLogRepository auditLogRepository;
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
@@ -27,6 +35,7 @@ public class RbacFacade {
         UserRepository userRepository = new UserRepository(dbConnection);
         RoleRepository roleRepository = new RoleRepository(dbConnection);
         PermissionRepository permissionRepository = new PermissionRepository(dbConnection);
+        ResourceRepository resourceRepository = new ResourceRepository(dbConnection);
         AuditLogRepository auditLogRepository = new AuditLogRepository(dbConnection);
         
         // Initialize session context
@@ -37,6 +46,13 @@ public class RbacFacade {
                                           permissionRepository, auditLogRepository);
         this.userService = new UserService(sessionContext, userRepository, 
                                           roleRepository, auditLogRepository);
+        this.roleService = new RoleService(sessionContext, roleRepository, 
+                                          permissionRepository, auditLogRepository);
+        this.permissionService = new PermissionService(sessionContext, 
+                                          permissionRepository, auditLogRepository);
+        this.resourceService = new ResourceService(sessionContext, resourceRepository, auditLogRepository);
+        this.auditService = new AuditService(sessionContext, auditLogRepository);
+        
         this.auditLogRepository = auditLogRepository;
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
@@ -75,7 +91,7 @@ public class RbacFacade {
     
     public User createUserWithRole(String username, String password, String roleCode) {
         Role role = roleRepository.findByCode(roleCode)
-            .orElseThrow(() -> new RuntimeException("Role not found: " + roleCode));
+            .orElseThrow(() -> new DataNotFoundException("Role not found: " + roleCode));
         return userService.createUser(username, password, role.getId());
     }
     
@@ -95,16 +111,51 @@ public class RbacFacade {
         userService.resetPassword(userId, newPassword);
     }
     
+    public void enableUser(Long userId) {
+        userService.setUserEnabled(userId, true);
+    }
+    
+    public void disableUser(Long userId) {
+        userService.setUserEnabled(userId, false);
+    }
+    
     // Role operations
+    public Role createRole(String code, String name, String description) {
+        return roleService.createRole(code, name, description);
+    }
+    
     public List<Role> listRoles() {
-        return roleRepository.findAll();
+        return roleService.listRoles();
+    }
+    
+    public Role getRoleByCode(String code) {
+        return roleService.getRoleByCode(code);
+    }
+
+    public Role updateRole(Long roleId, String name, String description) {
+        return roleService.updateRole(roleId, name, description);
+    }
+
+    public void deleteRole(Long roleId) {
+        roleService.deleteRole(roleId);
     }
     
     public void assignRoleToUser(String username, String roleCode) {
         User user = userService.getUserByUsername(username);
-        Role role = roleRepository.findByCode(roleCode)
-            .orElseThrow(() -> new RuntimeException("Role not found: " + roleCode));
-        roleRepository.assignRoleToUser(user.getId(), role.getId());
+        Role role = roleService.getRoleByCode(roleCode);
+        roleService.assignRoleToUser(user.getId(), role.getId());
+        
+        // Refresh permissions if current user
+        if (sessionContext.isLoggedIn() && 
+            sessionContext.getCurrentUser().getId().equals(user.getId())) {
+            authService.refreshCurrentUserPermissions();
+        }
+    }
+    
+    public void removeRoleFromUser(String username, String roleCode) {
+        User user = userService.getUserByUsername(username);
+        Role role = roleService.getRoleByCode(roleCode);
+        roleService.removeRoleFromUser(user.getId(), role.getId());
         
         // Refresh permissions if current user
         if (sessionContext.isLoggedIn() && 
@@ -115,17 +166,111 @@ public class RbacFacade {
     
     public List<Role> getUserRoles(String username) {
         User user = userService.getUserByUsername(username);
-        return roleRepository.findByUserId(user.getId());
+        return roleService.getRolesByUserId(user.getId());
+    }
+    
+    public List<Permission> getRolePermissions(String roleCode) {
+        Role role = roleService.getRoleByCode(roleCode);
+        return roleService.getPermissionsByRoleId(role.getId());
     }
     
     // Permission operations
+    public Permission createPermission(String code, String name, String description) {
+        return permissionService.createPermission(code, name, description);
+    }
+    
     public List<Permission> listPermissions() {
-        return permissionRepository.findAll();
+        return permissionService.listPermissions();
+    }
+    
+    public List<Permission> listMyPermissions() {
+        return permissionService.listMyPermissions();
+    }
+    
+    public Permission getPermissionByCode(String code) {
+        return permissionService.getPermissionByCode(code);
+    }
+    
+    public void assignPermissionToRole(String roleCode, String permissionCode) {
+        Role role = roleService.getRoleByCode(roleCode);
+        Permission permission = permissionService.getPermissionByCode(permissionCode);
+        permissionService.assignPermissionToRole(role.getId(), permission.getId());
+    }
+    
+    public void removePermissionFromRole(String roleCode, String permissionCode) {
+        Role role = roleService.getRoleByCode(roleCode);
+        Permission permission = permissionService.getPermissionByCode(permissionCode);
+        permissionService.removePermissionFromRole(role.getId(), permission.getId());
     }
     
     public List<Permission> getUserPermissions(String username) {
         User user = userService.getUserByUsername(username);
-        return permissionRepository.findByUserId(user.getId());
+        return permissionService.getPermissionsByUserId(user.getId());
+    }
+
+    public Permission updatePermission(String code, String name, String description, Long resourceId) {
+        return permissionService.updatePermission(code, name, description, resourceId);
+    }
+
+    public void deletePermission(String code) {
+        permissionService.deletePermission(code);
+    }
+
+    public void assignScopedPermission(String roleCode, String permissionCode, String resourceType, String resourceId) {
+        Role role = roleService.getRoleByCode(roleCode);
+        permissionService.assignScopedPermissionToRole(role.getId(), permissionCode, resourceType, resourceId);
+    }
+
+    public void removeScopedPermission(String roleCode, String permissionCode, String resourceType, String resourceId) {
+        Role role = roleService.getRoleByCode(roleCode);
+        permissionService.removeScopedPermissionFromRole(role.getId(), permissionCode, resourceType, resourceId);
+    }
+
+    public List<ScopedPermission> getScopedPermissionsForRole(String roleCode) {
+        Role role = roleService.getRoleByCode(roleCode);
+        return permissionService.getScopedPermissionsByRole(role.getId());
+    }
+
+    // Resource operations
+    public Resource createResource(String code, String name, String type, String url) {
+        return resourceService.createResource(code, name, type, url);
+    }
+
+    public Resource updateResource(Long resourceId, String name, String type, String url) {
+        return resourceService.updateResource(resourceId, name, type, url);
+    }
+
+    public void deleteResource(Long resourceId) {
+        resourceService.deleteResource(resourceId);
+    }
+
+    public List<Resource> listResources() {
+        return resourceService.listResources();
+    }
+
+    public Resource getResource(Long resourceId) {
+        return resourceService.getResource(resourceId);
+    }
+    
+    // Audit operations
+    public List<AuditLog> viewMyAuditLogs(int limit) {
+        return auditService.viewMyAuditLogs(limit);
+    }
+    
+    public List<AuditLog> viewUserAuditLogs(Long userId, int limit) {
+        return auditService.viewUserAuditLogs(userId, limit);
+    }
+    
+    public List<AuditLog> viewAllAuditLogs(int limit) {
+        return auditService.viewAllAuditLogs(limit);
+    }
+
+    public List<AuditLog> viewAuditLogsByAction(String action, int limit) {
+        return auditService.viewAuditLogsByAction(action, limit);
+    }
+
+    public List<AuditLog> viewAuditLogsByResource(String resourceType, String resourceId, int limit) {
+        return auditService.viewAuditLogsByResource(resourceType, resourceId, limit);
     }
     
     // Command permission check

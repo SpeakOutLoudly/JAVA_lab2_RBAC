@@ -25,6 +25,14 @@ public class PermissionCodes {
     public static final String PERMISSION_VIEW = "PERMISSION_VIEW";
     public static final String PERMISSION_ASSIGN = "PERMISSION_ASSIGN";
     
+    // Resource management
+    public static final String RESOURCE_CREATE = "RESOURCE_CREATE";
+    public static final String RESOURCE_UPDATE = "RESOURCE_UPDATE";
+    public static final String RESOURCE_DELETE = "RESOURCE_DELETE";
+    public static final String RESOURCE_VIEW = "RESOURCE_VIEW";
+    public static final String RESOURCE_LIST = "RESOURCE_LIST";
+    public static final String RESOURCE_GRANT = "RESOURCE_GRANT";
+    
     // Audit management
     public static final String AUDIT_VIEW = "AUDIT_VIEW";
     public static final String AUDIT_VIEW_ALL = "AUDIT_VIEW_ALL";

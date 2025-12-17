@@ -7,54 +7,58 @@ import com.study.domain.User;
 import com.study.facade.RbacFacade;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Handler for authentication related commands
+ * Handler for authentication related commands.
  */
 public class AuthCommandHandler implements CommandHandler {
-    
+
     @Override
     public void handle(String command, RbacFacade facade) {
         switch (command) {
             case "logout" -> handleLogout(facade);
             case "change-password" -> handleChangePassword(facade);
             case "view-profile" -> handleViewProfile(facade);
-            default -> System.out.println("未知的认证命令: " + command);
+            default -> System.out.println("Unknown auth command: " + command);
         }
     }
-    
+
     private void handleLogout(RbacFacade facade) {
         facade.logout();
-        System.out.println("✓ 登出成功");
+        System.out.println("✔ Logged out.");
     }
-    
+
     private void handleChangePassword(RbacFacade facade) {
-        String oldPassword = InputUtils.readPassword("当前密码: ");
-        String newPassword = InputUtils.readPassword("新密码: ");
-        String confirm = InputUtils.readPassword("确认新密码: ");
-        
+        String oldPassword = InputUtils.readPassword("Current password: ");
+        String newPassword = InputUtils.readPassword("New password: ");
+        String confirm = InputUtils.readPassword("Confirm new password: ");
+
         if (!newPassword.equals(confirm)) {
-            System.out.println("❌ 密码不匹配");
+            System.out.println("⚠ Password mismatch.");
             return;
         }
-        
+
         facade.changePassword(oldPassword, newPassword);
-        System.out.println("✓ 密码修改成功");
+        System.out.println("✔ Password updated.");
     }
-    
+
     private void handleViewProfile(RbacFacade facade) {
         User user = facade.getCurrentUser();
-        System.out.println("\n" + "─── 用户资料 ───");
+        System.out.println("\n== Profile ==");
         System.out.println("ID: " + user.getId());
-        System.out.println("用户名: " + user.getUsername());
-        System.out.println("状态: " + (user.isEnabled() ? "启用" : "禁用"));
-        System.out.println("创建时间: " + user.getCreatedAt());
-        
+        System.out.println("Username: " + user.getUsername());
+        System.out.println("Status: " + (user.isEnabled() ? "ENABLED" : "DISABLED"));
+        System.out.println("Created at: " + user.getCreatedAt());
+
         List<Role> roles = facade.getUserRoles(user.getUsername());
-        System.out.println("\n角色: " + roles.stream().map(Role::getName).toList());
-        
+        System.out.println("Roles: " + roles.stream().map(Role::getName).toList());
+
         List<Permission> permissions = facade.getUserPermissions(user.getUsername());
-        System.out.println("权限 (" + permissions.size() + "): " + 
-            permissions.stream().map(Permission::getCode).limit(5).toList() + "...");
+        String permPreview = permissions.stream()
+                .map(Permission::getCode)
+                .limit(5)
+                .collect(Collectors.joining(", "));
+        System.out.println("Permissions (" + permissions.size() + "): " + permPreview + (permissions.size() > 5 ? "..." : ""));
     }
 }

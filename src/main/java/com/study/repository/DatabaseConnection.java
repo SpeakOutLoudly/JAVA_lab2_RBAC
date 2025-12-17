@@ -13,13 +13,15 @@ import java.sql.Statement;
  */
 public class DatabaseConnection {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
-    private static final String DB_URL = "jdbc:h2:./data/rbac;MODE=MySQL";
+    private static final String DEFAULT_DB_URL = "jdbc:h2:./data/rbac;MODE=MySQL";
     private static final String DB_USER = "sa";
     private static final String DB_PASSWORD = "";
     
     private static DatabaseConnection instance;
+    private final String dbUrl;
     
     private DatabaseConnection() {
+        this.dbUrl = System.getProperty("rbac.db.url", DEFAULT_DB_URL);
         initializeDatabase();
     }
     
@@ -29,9 +31,13 @@ public class DatabaseConnection {
         }
         return instance;
     }
+
+    public static synchronized void reset() {
+        instance = null;
+    }
     
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        return DriverManager.getConnection(dbUrl, DB_USER, DB_PASSWORD);
     }
     
     private void initializeDatabase() {
@@ -122,6 +128,30 @@ public class DatabaseConnection {
                 FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
                 FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
             )
+        """);
+        
+        stmt.execute("""
+            CREATE TABLE IF NOT EXISTS role_permission_scopes (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                role_id BIGINT NOT NULL,
+                permission_code VARCHAR(50) NOT NULL,
+                resource_type VARCHAR(50) NOT NULL,
+                resource_id VARCHAR(100),
+                scope_key VARCHAR(100) NOT NULL DEFAULT '__GLOBAL__',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
+                FOREIGN KEY (permission_code) REFERENCES permissions(code) ON DELETE CASCADE
+            )
+        """);
+
+        stmt.execute("""
+            ALTER TABLE role_permission_scopes
+            ADD COLUMN IF NOT EXISTS scope_key VARCHAR(100) NOT NULL DEFAULT '__GLOBAL__'
+        """);
+        
+        stmt.execute("""
+            CREATE UNIQUE INDEX IF NOT EXISTS uq_role_permission_scope
+            ON role_permission_scopes(role_id, permission_code, resource_type, scope_key)
         """);
         
         // Audit logs
