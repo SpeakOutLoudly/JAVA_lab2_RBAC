@@ -1,6 +1,6 @@
 package com.study.repository;
 
-import com.study.exception.PersistenceException;
+import com.study.exception.DataAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ public abstract class BaseRepository {
     /**
      * Execute operation within a transaction
      */
-    protected <T> T executeInTransaction(TransactionCallback<T> callback) {
+    public <T> T executeInTransaction(TransactionCallback<T> callback) {
         Connection conn = null;
         try {
             conn = dbConnection.getConnection();
@@ -40,7 +40,7 @@ public abstract class BaseRepository {
                     logger.error("Failed to rollback transaction", rollbackEx);
                 }
             }
-            throw new PersistenceException("Transaction failed", e);
+            throw new DataAccessException("Transaction failed", e);
         } finally {
             if (conn != null) {
                 try {
@@ -54,7 +54,7 @@ public abstract class BaseRepository {
     }
     
     @FunctionalInterface
-    protected interface TransactionCallback<T> {
+    public interface TransactionCallback<T> {
         T doInTransaction(Connection conn) throws Exception;
     }
 }

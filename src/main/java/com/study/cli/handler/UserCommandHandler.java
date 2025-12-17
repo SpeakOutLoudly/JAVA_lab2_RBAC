@@ -6,12 +6,13 @@ import com.study.domain.User;
 import com.study.facade.RbacFacade;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Handler for user management commands
+ * Handler for user management commands.
  */
 public class UserCommandHandler implements CommandHandler {
-    
+
     @Override
     public void handle(String command, RbacFacade facade) {
         switch (command) {
@@ -20,56 +21,88 @@ public class UserCommandHandler implements CommandHandler {
             case "view-user" -> handleViewUser(facade);
             case "delete-user" -> handleDeleteUser(facade);
             case "update-user" -> handleUpdateUser(facade);
-            default -> System.out.println("未知的用户命令: " + command);
+            default -> System.out.println("Unknown user command: " + command);
         }
     }
-    
+
     private void handleCreateUser(RbacFacade facade) {
-        String username = InputUtils.readInput("新用户名: ");
-        String password = InputUtils.readPassword("password: ");
-        String roleCode = InputUtils.readInput("角色代码 (可选，按回车跳过): ");
-        
-        User user = roleCode.isBlank() ? 
-            facade.createUser(username, password) :
-            facade.createUserWithRole(username, password, roleCode);
-        
-        System.out.println("✓ 用户创建成功: " + user.getUsername());
+        String username = InputUtils.readInput("Username: ");
+        String password = InputUtils.readPassword("Password: ");
+        String roleCode = InputUtils.readInput("Assign role (optional): ");
+
+        User user = roleCode.isBlank()
+                ? facade.createUser(username, password)
+                : facade.createUserWithRole(username, password, roleCode);
+
+        System.out.println("✔ User created: " + user.getUsername());
     }
-    //TODO: 增加角色
+
     private void handleListUsers(RbacFacade facade) {
         List<User> users = facade.listUsers();
-        System.out.println("\n" + "─── 用户列表 (" + users.size() + ") ───");
+        System.out.println("\n== Users (" + users.size() + ") ==");
+        System.out.printf("%-6s %-20s %-10s %s%n", "ID", "Username", "Status", "Roles");
+        System.out.println("-".repeat(70));
+
         for (User user : users) {
-            System.out.printf("[%d] %s - %s%n", 
-                user.getId(), 
-                user.getUsername(), 
-                user.isEnabled() ? "启用" : "禁用");
+            List<Role> roles = facade.getUserRoles(user.getUsername());
+            String roleNames = roles.isEmpty()
+                    ? "-"
+                    : roles.stream().map(Role::getName).collect(Collectors.joining(", "));
+
+            System.out.printf("%-6d %-20s %-10s %s%n",
+                    user.getId(),
+                    user.getUsername(),
+                    user.isEnabled() ? "ENABLED" : "DISABLED",
+                    roleNames);
         }
     }
-    
+
     private void handleViewUser(RbacFacade facade) {
-        String username = InputUtils.readInput("用户名: ");
+        String username = InputUtils.readInput("Username: ");
         User user = facade.viewUser(username);
-        
-        System.out.println("\n" + "─── 用户详情 ───");
+
+        System.out.println("\n== User Detail ==");
         System.out.println("ID: " + user.getId());
-        System.out.println("用户名: " + user.getUsername());
-        System.out.println("状态: " + (user.isEnabled() ? "启用" : "禁用"));
-        
+        System.out.println("Username: " + user.getUsername());
+        System.out.println("Status: " + (user.isEnabled() ? "ENABLED" : "DISABLED"));
         List<Role> roles = facade.getUserRoles(username);
-        System.out.println("角色: " + roles.stream().map(Role::getName).toList());
+        System.out.println("Roles: " + roles.stream().map(Role::getName).toList());
     }
 
     private void handleDeleteUser(RbacFacade facade) {
-        long userId = InputUtils.readLong("用户ID: ");
-        facade.deleteUser(userId);
-        System.out.println("用户删除成功!");
+        long userId = InputUtils.readLong("User ID: ");
+        String confirm = InputUtils.readInput("Confirm delete user? (yes/no): ");
+        if ("yes".equalsIgnoreCase(confirm)) {
+            facade.deleteUser(userId);
+            System.out.println("✔ User deleted.");
+        } else {
+            System.out.println("Delete cancelled.");
+        }
     }
 
     private void handleUpdateUser(RbacFacade facade) {
-        long userId = InputUtils.readLong("用户ID: ");
-        String newPassword = InputUtils.readPassword("新密码: ");
-        facade.resetPassword(userId, newPassword);
-        System.out.println("更新用户成功!");
+        long userId = InputUtils.readLong("User ID: ");
+        System.out.println("\nChoose action:");
+        System.out.println("1. Reset password");
+        System.out.println("2. Enable user");
+        System.out.println("3. Disable user");
+        String choice = InputUtils.readInput("Select (1-3): ");
+
+        switch (choice) {
+            case "1" -> {
+                String newPassword = InputUtils.readPassword("New password: ");
+                facade.resetPassword(userId, newPassword);
+                System.out.println("✔ Password reset.");
+            }
+            case "2" -> {
+                facade.enableUser(userId);
+                System.out.println("✔ User enabled.");
+            }
+            case "3" -> {
+                facade.disableUser(userId);
+                System.out.println("✔ User disabled.");
+            }
+            default -> System.out.println("Invalid option.");
+        }
     }
 }

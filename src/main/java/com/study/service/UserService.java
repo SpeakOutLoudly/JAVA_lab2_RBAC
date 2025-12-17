@@ -61,12 +61,14 @@ public class UserService extends BaseService {
                 user.setSalt(salt);
                 user.setEnabled(true);
                 
-                User savedUser = userRepository.save(user);
-                
-                // Assign default role if specified
-                if (defaultRoleId != null) {
-                    roleRepository.assignRoleToUser(savedUser.getId(), defaultRoleId);
-                }
+                User savedUser = userRepository.executeInTransaction(conn -> {
+                    User persisted = userRepository.save(conn, user);
+                    
+                    if (defaultRoleId != null) {
+                        roleRepository.assignRoleToUser(conn, persisted.getId(), defaultRoleId);
+                    }
+                    return persisted;
+                });
                 
                 logger.info("User created: {}", username);
                 return savedUser;

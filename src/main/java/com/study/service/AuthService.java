@@ -15,9 +15,7 @@ import com.study.security.Sha256PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Authentication and Authorization Service
@@ -66,8 +64,9 @@ public class AuthService extends BaseService {
                 
                 // Load and cache permissions
                 List<Permission> permissions = permissionRepository.findByUserId(user.getId());
+                var scopedPermissions = permissionRepository.findScopedPermissionsByUserId(user.getId());
                 sessionContext.setCurrentUser(user);
-                sessionContext.setEffectivePermissions(new HashSet<>(permissions));
+                sessionContext.setPermissions(permissions, scopedPermissions);
                 
                 logger.info("User logged in: {}, permissions loaded: {}", 
                         username, permissions.size());
@@ -135,7 +134,8 @@ public class AuthService extends BaseService {
         if (sessionContext.isLoggedIn()) {
             Long userId = sessionContext.getCurrentUser().getId();
             List<Permission> permissions = permissionRepository.findByUserId(userId);
-            sessionContext.refreshPermissions(new HashSet<>(permissions));
+            var scopedPermissions = permissionRepository.findScopedPermissionsByUserId(userId);
+            sessionContext.refreshPermissions(permissions, scopedPermissions);
             logger.info("Permissions refreshed for user: {}, count: {}",
                     sessionContext.getCurrentUser().getUsername(), permissions.size());
         }

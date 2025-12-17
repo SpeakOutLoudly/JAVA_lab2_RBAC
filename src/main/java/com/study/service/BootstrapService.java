@@ -78,6 +78,9 @@ public class BootstrapService {
             PermissionCodes.PERMISSION_CREATE, PermissionCodes.PERMISSION_UPDATE,
             PermissionCodes.PERMISSION_DELETE, PermissionCodes.PERMISSION_VIEW,
             PermissionCodes.PERMISSION_ASSIGN,
+            PermissionCodes.RESOURCE_CREATE, PermissionCodes.RESOURCE_UPDATE,
+            PermissionCodes.RESOURCE_DELETE, PermissionCodes.RESOURCE_VIEW,
+            PermissionCodes.RESOURCE_LIST, PermissionCodes.RESOURCE_GRANT,
             PermissionCodes.AUDIT_VIEW, PermissionCodes.AUDIT_VIEW_ALL
         };
         
@@ -123,7 +126,9 @@ public class BootstrapService {
         String[] basicCodes = {
             PermissionCodes.USER_VIEW, PermissionCodes.USER_LIST,
             PermissionCodes.ROLE_VIEW, PermissionCodes.PERMISSION_VIEW,
-            PermissionCodes.AUDIT_VIEW
+            PermissionCodes.AUDIT_VIEW,
+            PermissionCodes.RESOURCE_VIEW,
+            PermissionCodes.RESOURCE_LIST
         };
         
         for (String code : basicCodes) {

@@ -1,9 +1,12 @@
 package com.study.context;
 
 import com.study.domain.Permission;
+import com.study.domain.ScopedPermission;
 import com.study.domain.User;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -11,10 +14,12 @@ import java.util.Set;
  */
 public class SessionContext {
     private User currentUser;
-    private Set<String> effectivePermissions;
+    private final Set<String> globalPermissions;
+    private final List<ScopedPermission> scopedPermissions;
     
     public SessionContext() {
-        this.effectivePermissions = new HashSet<>();
+        this.globalPermissions = new HashSet<>();
+        this.scopedPermissions = new ArrayList<>();
     }
     
     public User getCurrentUser() {
@@ -26,22 +31,41 @@ public class SessionContext {
     }
     
     public Set<String> getEffectivePermissions() {
-        return effectivePermissions;
+        return globalPermissions;
     }
     
-    public void setEffectivePermissions(Set<Permission> permissions) {
-        this.effectivePermissions.clear();
+    public void setPermissions(List<Permission> permissions, List<ScopedPermission> scoped) {
+        this.globalPermissions.clear();
         for (Permission permission : permissions) {
-            this.effectivePermissions.add(permission.getCode());
+            this.globalPermissions.add(permission.getCode());
+        }
+        this.scopedPermissions.clear();
+        if (scoped != null) {
+            this.scopedPermissions.addAll(scoped);
         }
     }
     
-    public void refreshPermissions(Set<Permission> permissions) {
-        setEffectivePermissions(permissions);
+    public void refreshPermissions(List<Permission> permissions, List<ScopedPermission> scoped) {
+        setPermissions(permissions, scoped);
     }
     
     public boolean hasPermission(String permissionCode) {
-        return effectivePermissions.contains(permissionCode);
+        return globalPermissions.contains(permissionCode);
+    }
+    
+    public boolean hasPermission(String permissionCode, String resourceType, String resourceId) {
+        if (permissionCode == null) {
+            return true;
+        }
+        if (globalPermissions.contains(permissionCode)) {
+            return true;
+        }
+        if (resourceType == null) {
+            return false;
+        }
+        return scopedPermissions.stream()
+                .filter(scope -> permissionCode.equals(scope.getPermissionCode()))
+                .anyMatch(scope -> scope.matches(resourceType, resourceId));
     }
     
     public boolean isLoggedIn() {
@@ -50,6 +74,7 @@ public class SessionContext {
     
     public void clear() {
         this.currentUser = null;
-        this.effectivePermissions.clear();
+        this.globalPermissions.clear();
+        this.scopedPermissions.clear();
     }
 }

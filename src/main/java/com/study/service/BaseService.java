@@ -37,7 +37,7 @@ public abstract class BaseService {
         
         // Step 1: Authorization check
         if (requiredPermission != null) {
-            checkPermission(requiredPermission, action);
+            checkPermission(requiredPermission, action, resourceType, resourceId);
         }
         
         // Step 2: Validation
@@ -90,14 +90,14 @@ public abstract class BaseService {
     /**
      * Check if current user has required permission
      */
-    protected void checkPermission(String permissionCode, String action) {
+    protected void checkPermission(String permissionCode, String action, String resourceType, String resourceId) {
         if (!sessionContext.isLoggedIn()) {
             String message = "Not logged in, cannot perform: " + action;
             logger.warn(message);
             throw new PermissionDeniedException(message);
         }
         
-        if (!sessionContext.hasPermission(permissionCode)) {
+        if (!sessionContext.hasPermission(permissionCode, resourceType, resourceId)) {
             String message = String.format("Permission denied: %s (required: %s)", 
                     action, permissionCode);
             logger.warn("User {} attempted unauthorized action: {}", 
