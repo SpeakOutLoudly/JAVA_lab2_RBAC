@@ -69,7 +69,9 @@ public class AuthService extends BaseService {
                 
                 logger.info("User logged in: {}, permissions loaded: {}", 
                         username, permissions.size());
-                
+                logger.info("login scopedPermissions size={}", sessionContext.getScopedPermissions().size());
+                logger.info("login scopedPermissions={}", sessionContext.getScopedPermissions());
+
                 return user;
             }
         );

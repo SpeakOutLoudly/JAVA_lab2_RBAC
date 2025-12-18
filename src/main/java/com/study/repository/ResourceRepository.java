@@ -166,6 +166,33 @@ public class ResourceRepository extends BaseRepository {
         }
     }
 
+    public List<Resource> findByTypes(java.util.Set<String> types) {
+        if (types == null || types.isEmpty()) {
+            return new ArrayList<>();
+        }
+        String inClause = types.stream()
+                .map(t -> "?")
+                .collect(java.util.stream.Collectors.joining(","));
+        String sql = "SELECT * FROM resources WHERE LOWER(type) IN (" + inClause + ")";
+
+        List<Resource> resources = new ArrayList<>();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            int i = 1;
+            for (String type : types) {
+                pstmt.setString(i++, type.toLowerCase());
+            }
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                resources.add(mapResource(rs));
+            }
+            return resources;
+        } catch (SQLException e) {
+            logger.error("Failed to find resources by types", e);
+            throw new DataAccessException("Failed to find resources by types", e);
+        }
+    }
+
     private Resource mapResource(ResultSet rs) throws SQLException {
         Resource resource = new Resource();
         resource.setId(rs.getLong("id"));

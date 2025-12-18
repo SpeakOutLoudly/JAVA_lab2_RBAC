@@ -443,4 +443,20 @@ public class PermissionRepository extends BaseRepository {
         scopedPermission.setResourceId(rs.getString("resource_id"));
         return scopedPermission;
     }
+
+    public void clearScopedPermissions(Long roleId, String permissionCode, String resourceType) {
+        String sql = """
+            DELETE FROM role_permission_scopes
+            WHERE role_id = ? AND permission_code = ? AND resource_type = ?
+        """;
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, roleId);
+            pstmt.setString(2, permissionCode);
+            pstmt.setString(3, resourceType);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed to clear scoped permissions", e);
+        }
+    }
 }

@@ -225,7 +225,32 @@ public class PermissionService extends BaseService {
                     validateNotBlank(permissionCode, "Permission code");
                     validateNotBlank(resourceType, "Resource type");
                 },
-                () -> permissionRepository.assignScopedPermission(roleId, permissionCode, resourceType, resourceId)
+                () -> {
+                    String normalizedType = resourceType.trim();
+                    List<ScopedPermission> existing = permissionRepository.findScopedPermissionsByRoleId(roleId);
+                    boolean hasGlobal = existing.stream()
+                            .anyMatch(s -> permissionCode.equals(s.getPermissionCode())
+                                    && normalizedType.equalsIgnoreCase(s.getResourceType())
+                                    && (s.getResourceId() == null || s.getResourceId().isBlank()));
+                    boolean hasSpecific = existing.stream()
+                            .anyMatch(s -> permissionCode.equals(s.getPermissionCode())
+                                    && normalizedType.equalsIgnoreCase(s.getResourceType())
+                                    && s.getResourceId() != null && !s.getResourceId().isBlank());
+
+                    boolean incomingGlobal = resourceId == null || resourceId.isBlank();
+                    if (incomingGlobal) {
+                        if (hasGlobal) {
+                            throw new ValidationException("Already has global scope for this permission/resourceType");
+                        }
+                        if (hasSpecific) {
+                            permissionRepository.clearScopedPermissions(roleId, permissionCode, normalizedType);
+                        }
+                    } else if (hasGlobal) {
+                        throw new ValidationException("Global scope already exists; remove it before adding specific scope");
+                    }
+
+                    permissionRepository.assignScopedPermission(roleId, permissionCode, normalizedType, resourceId);
+                }
         );
     }
 

@@ -13,10 +13,7 @@ import com.study.service.dto.ResourceAccessView;
 import com.study.service.dto.ResourceRoleScope;
 import com.study.service.dto.ResourceUserScope;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -161,7 +158,6 @@ public class ResourceService extends BaseService {
             return Collections.emptyList();
         }
 
-        // Extract resource IDs from scoped permissions (resourceId is String, need to parse to Long)
         Set<Long> resourceIds = scopedPermissions.stream()
                 .map(ScopedPermission::getResourceId)
                 .filter(Objects::nonNull)
@@ -176,13 +172,31 @@ public class ResourceService extends BaseService {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
-        
-        if (resourceIds.isEmpty()) {
+
+        Set<String> allTypes = scopedPermissions.stream()
+                .filter(s -> s.getResourceId() == null || s.getResourceId().isBlank())
+                .map(ScopedPermission::getResourceType)
+                .filter(Objects::nonNull)
+                .filter(t -> !t.isBlank())
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+
+        List<Resource> results = new ArrayList<>();
+        if (!allTypes.isEmpty()) {
+            results.addAll(resourceRepository.findByTypes(allTypes));
+        }
+        if (!resourceIds.isEmpty()) {
+            results.addAll(resourceRepository.findByIds(resourceIds));
+        }
+
+        if (results.isEmpty()) {
             return Collections.emptyList();
         }
-        
-        // Fetch resources by IDs
-        logger.info("User {} listing {} scoped resources", currentUser.getUsername(), resourceIds.size());
-        return resourceRepository.findByIds(resourceIds);
+        // Deduplicate by id
+        return results.stream()
+                .collect(Collectors.toMap(Resource::getId, r -> r, (a, b) -> a))
+                .values()
+                .stream()
+                .toList();
     }
 }
