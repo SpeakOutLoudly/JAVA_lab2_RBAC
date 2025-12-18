@@ -266,3 +266,28 @@ Caused by: java.net.ConnectException: Connection refused: connect
 2025-12-18 19:02:34.159 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 10
 2025-12-18 19:02:34.160 [main] INFO  com.study.service.AuthService - login scopedPermissions size=1
 2025-12-18 19:02:34.160 [main] INFO  com.study.service.AuthService - login scopedPermissions=[com.study.domain.ScopedPermission@27e60a62]
+2025-12-18 19:09:31.385 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 19:09:31.418 [main] INFO  c.s.repository.DatabaseConnection - System already initialized
+2025-12-18 19:10:13.205 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-18 19:10:21.355 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 25
+2025-12-18 19:10:21.355 [main] INFO  com.study.service.AuthService - login scopedPermissions size=2
+2025-12-18 19:10:21.355 [main] INFO  com.study.service.AuthService - login scopedPermissions=[com.study.domain.ScopedPermission@cc34f5ae, com.study.domain.ScopedPermission@cc34f5df]
+2025-12-18 19:21:45.895 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 19:21:45.930 [main] INFO  c.s.repository.DatabaseConnection - System already initialized
+2025-12-18 19:21:52.341 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 10
+2025-12-18 19:22:20.320 [main] INFO  com.study.service.AuthService - User logged out: test
+2025-12-18 19:22:25.444 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 25
+2025-12-18 19:23:36.095 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=1, error=Role not found: 1
+2025-12-18 19:23:53.642 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=REMOVE_SCOPED_PERMISSION, resourceType=1, resourceId=null, error=Scoped permission not found for role
+2025-12-18 19:26:39.369 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 19:26:39.399 [main] INFO  c.s.repository.DatabaseConnection - System already initialized
+2025-12-18 19:26:47.809 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 25
+2025-12-18 19:29:36.911 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 19:29:36.946 [main] INFO  c.s.repository.DatabaseConnection - System already initialized
+2025-12-18 19:29:43.013 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 10
+2025-12-18 19:29:47.718 [main] INFO  com.study.service.AuthService - User logged out: test
+2025-12-18 19:30:24.450 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 19:30:24.476 [main] INFO  c.s.repository.DatabaseConnection - Initializing system defaults...
+2025-12-18 19:30:25.169 [main] INFO  c.s.repository.DatabaseConnection - Default data initialized. Admin: admin / admin123
+2025-12-18 19:30:30.055 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 19:30:32.911 [main] INFO  com.study.service.AuthService - User logged out: admin

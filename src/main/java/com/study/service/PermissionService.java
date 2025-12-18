@@ -8,6 +8,7 @@ import com.study.exception.ValidationException;
 import com.study.repository.AuditLogRepository;
 import com.study.repository.PermissionRepository;
 
+import java.util.Locale;
 import java.util.List;
 
 /**
@@ -226,7 +227,8 @@ public class PermissionService extends BaseService {
                     validateNotBlank(resourceType, "Resource type");
                 },
                 () -> {
-                    String normalizedType = resourceType.trim();
+                    String normalizedType = resourceType.trim().toUpperCase(Locale.ROOT);
+                    String normalizedResourceId = resourceId == null ? null : resourceId.trim();
                     List<ScopedPermission> existing = permissionRepository.findScopedPermissionsByRoleId(roleId);
                     boolean hasGlobal = existing.stream()
                             .anyMatch(s -> permissionCode.equals(s.getPermissionCode())
@@ -237,7 +239,7 @@ public class PermissionService extends BaseService {
                                     && normalizedType.equalsIgnoreCase(s.getResourceType())
                                     && s.getResourceId() != null && !s.getResourceId().isBlank());
 
-                    boolean incomingGlobal = resourceId == null || resourceId.isBlank();
+                    boolean incomingGlobal = normalizedResourceId == null || normalizedResourceId.isBlank();
                     if (incomingGlobal) {
                         if (hasGlobal) {
                             throw new ValidationException("Already has global scope for this permission/resourceType");
@@ -249,7 +251,7 @@ public class PermissionService extends BaseService {
                         throw new ValidationException("Global scope already exists; remove it before adding specific scope");
                     }
 
-                    permissionRepository.assignScopedPermission(roleId, permissionCode, normalizedType, resourceId);
+                    permissionRepository.assignScopedPermission(roleId, permissionCode, normalizedType, normalizedResourceId);
                 }
         );
     }

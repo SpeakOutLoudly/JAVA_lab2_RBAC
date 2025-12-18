@@ -152,41 +152,54 @@ public class ResourceService extends BaseService {
         }
         User currentUser = sessionContext.getCurrentUser();
         
-        // Get scoped permissions from session context
         List<ScopedPermission> scopedPermissions = sessionContext.getScopedPermissions();
         if (scopedPermissions == null || scopedPermissions.isEmpty()) {
             return Collections.emptyList();
         }
 
-        Set<Long> resourceIds = scopedPermissions.stream()
-                .map(ScopedPermission::getResourceId)
-                .filter(Objects::nonNull)
-                .filter(id -> !id.isBlank())
-                .map(id -> {
+        List<ScopedPermission> resourceScoped = scopedPermissions.stream()
+                .filter(s -> s.getResourceType() != null && !s.getResourceType().isBlank())
+                .toList();
+
+        if (resourceScoped.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        Set<String> globalTypes = resourceScoped.stream()
+                .filter(s -> s.getResourceId() == null || s.getResourceId().isBlank())
+                .map(ScopedPermission::getResourceType)
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+
+        Map<Long, Set<String>> specificById = resourceScoped.stream()
+                .filter(s -> s.getResourceId() != null && !s.getResourceId().isBlank())
+                .map(s -> {
                     try {
-                        return Long.parseLong(id);
+                        return new AbstractMap.SimpleEntry<>(Long.parseLong(s.getResourceId()),
+                                s.getResourceType().toLowerCase());
                     } catch (NumberFormatException e) {
-                        logger.warn("Invalid resource ID format: {}", id);
+                        logger.warn("Invalid resource ID format: {}", s.getResourceId());
                         return null;
                     }
                 })
                 .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-
-        Set<String> allTypes = scopedPermissions.stream()
-                .filter(s -> s.getResourceId() == null || s.getResourceId().isBlank())
-                .map(ScopedPermission::getResourceType)
-                .filter(Objects::nonNull)
-                .filter(t -> !t.isBlank())
-                .map(String::toLowerCase)
-                .collect(Collectors.toSet());
+                .collect(Collectors.groupingBy(
+                        AbstractMap.SimpleEntry::getKey,
+                        Collectors.mapping(AbstractMap.SimpleEntry::getValue, Collectors.toSet())
+                ));
 
         List<Resource> results = new ArrayList<>();
-        if (!allTypes.isEmpty()) {
-            results.addAll(resourceRepository.findByTypes(allTypes));
+        if (!globalTypes.isEmpty()) {
+            results.addAll(resourceRepository.findByTypes(globalTypes));
         }
-        if (!resourceIds.isEmpty()) {
-            results.addAll(resourceRepository.findByIds(resourceIds));
+        if (!specificById.isEmpty()) {
+            List<Resource> fetched = resourceRepository.findByIds(specificById.keySet());
+            results.addAll(
+                    fetched.stream()
+                            .filter(r -> specificById.getOrDefault(r.getId(), Collections.emptySet())
+                                    .contains(r.getType().toLowerCase()))
+                            .toList()
+            );
         }
 
         if (results.isEmpty()) {

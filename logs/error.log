@@ -134,3 +134,6 @@ Caused by: java.net.ConnectException: Connection refused: connect
 2025-12-18 17:56:54.421 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=VIEW_PERMISSION, resourceType=Permission, resourceId=HAVE_CPU, error=Permission not found: HAVE_CPU
 2025-12-18 17:57:05.327 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=HAVE_GPU, error=Role not found: HAVE_GPU
 2025-12-18 18:27:41.120 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-18 19:10:13.205 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-18 19:23:36.095 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=1, error=Role not found: 1
+2025-12-18 19:23:53.642 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=REMOVE_SCOPED_PERMISSION, resourceType=1, resourceId=null, error=Scoped permission not found for role
