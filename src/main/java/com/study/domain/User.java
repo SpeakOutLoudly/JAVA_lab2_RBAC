@@ -9,6 +9,9 @@ public class User {
     private String passwordHash;
     private String salt;
     private boolean enabled;
+    private String email;
+    private String phone;
+    private String realName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -16,12 +19,16 @@ public class User {
     }
 
     public User(Long id, String username, String passwordHash, String salt, boolean enabled, 
+                String email, String phone, String realName,
                 LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.passwordHash = passwordHash;
         this.salt = salt;
         this.enabled = enabled;
+        this.email = email;
+        this.phone = phone;
+        this.realName = realName;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -82,6 +89,30 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,6 +131,9 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
+                ", realName='" + realName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
                 ", enabled=" + enabled +
                 ", createdAt=" + createdAt +
                 '}';

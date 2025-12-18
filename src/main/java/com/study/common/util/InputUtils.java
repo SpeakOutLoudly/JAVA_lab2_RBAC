@@ -74,6 +74,46 @@ public class InputUtils {
         return scanner.nextLine().trim();
     }
 
+    /**
+     * Read email input with validation.
+     * Empty input is allowed, non-empty input must match email format.
+     * 
+     * @param prompt the prompt message
+     * @return validated email or empty string
+     */
+    public static String readEmail(String prompt) {
+        while (true) {
+            String input = readInput(prompt);
+            if (input.isBlank()) {
+                return "";
+            }
+            if (input.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                return input;
+            }
+            System.out.println("Invalid email format. Please enter a valid email or leave blank.");
+        }
+    }
+
+    /**
+     * Read phone input with validation.
+     * Empty input is allowed, non-empty input must match phone format.
+     * 
+     * @param prompt the prompt message
+     * @return validated phone or empty string
+     */
+    public static String readPhone(String prompt) {
+        while (true) {
+            String input = readInput(prompt);
+            if (input.isBlank()) {
+                return "";
+            }
+            if (input.matches("^[0-9+\\-() ]{6,20}$")) {
+                return input;
+            }
+            System.out.println("Invalid phone format. Please enter 6-20 characters (digits, +, -, (), space) or leave blank.");
+        }
+    }
+
     public static void close() {
         scanner.close();
     }

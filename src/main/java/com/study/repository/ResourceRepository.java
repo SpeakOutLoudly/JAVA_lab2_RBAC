@@ -2,8 +2,7 @@ package com.study.repository;
 
 import com.study.domain.Resource;
 import com.study.exception.DataAccessException;
-import com.study.exception.DataNotFoundException;
-import com.study.exception.DuplicateKeyException;
+import com.study.exception.ValidationException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class ResourceRepository extends BaseRepository {
             }
             return resource;
         } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DuplicateKeyException("Resource code already exists: " + resource.getCode());
+            throw new ValidationException("Resource code already exists: " + resource.getCode());
         } catch (SQLException e) {
             throw new DataAccessException("Failed to save resource", e);
         }
@@ -64,7 +63,7 @@ public class ResourceRepository extends BaseRepository {
             pstmt.setString(3, resource.getUrl());
             pstmt.setLong(4, resource.getId());
             if (pstmt.executeUpdate() == 0) {
-                throw new DataNotFoundException("Resource not found: " + resource.getId());
+                throw new ValidationException("Resource not found: " + resource.getId());
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to update resource", e);
@@ -85,7 +84,7 @@ public class ResourceRepository extends BaseRepository {
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, resourceId);
             if (pstmt.executeUpdate() == 0) {
-                throw new DataNotFoundException("Resource not found: " + resourceId);
+                throw new ValidationException("Resource not found: " + resourceId);
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to delete resource", e);
@@ -137,6 +136,33 @@ public class ResourceRepository extends BaseRepository {
         } catch (SQLException e) {
             logger.error("Failed to list resources", e);
             throw new DataAccessException("Failed to list resources", e);
+        }
+    }
+
+    public List<Resource> findByIds(java.util.Set<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+        String inClause = ids.stream()
+                .map(id -> "?")
+                .collect(java.util.stream.Collectors.joining(","));
+        String sql = "SELECT * FROM resources WHERE id IN (" + inClause + ")";
+        
+        List<Resource> resources = new ArrayList<>();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            int i = 1;
+            for (Long id : ids) {
+                pstmt.setLong(i++, id);
+            }
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                resources.add(mapResource(rs));
+            }
+            return resources;
+        } catch (SQLException e) {
+            logger.error("Failed to find resources by ids", e);
+            throw new DataAccessException("Failed to find resources by ids", e);
         }
     }
 

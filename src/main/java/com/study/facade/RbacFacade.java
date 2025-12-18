@@ -8,7 +8,8 @@ import com.study.domain.Resource;
 import com.study.domain.Role;
 import com.study.domain.ScopedPermission;
 import com.study.domain.User;
-import com.study.exception.DataNotFoundException;
+import com.study.service.dto.ResourceAccessView;
+import com.study.exception.ValidationException;
 import com.study.repository.*;
 import com.study.service.*;
 
@@ -50,17 +51,14 @@ public class RbacFacade {
                                           permissionRepository, auditLogRepository);
         this.permissionService = new PermissionService(sessionContext, 
                                           permissionRepository, auditLogRepository);
-        this.resourceService = new ResourceService(sessionContext, resourceRepository, auditLogRepository);
+        this.resourceService = new ResourceService(sessionContext, resourceRepository, 
+                                          permissionRepository, auditLogRepository);
         this.auditService = new AuditService(sessionContext, auditLogRepository);
         
         this.auditLogRepository = auditLogRepository;
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         
-        // Bootstrap system on first run
-        BootstrapService bootstrapService = new BootstrapService(
-            userRepository, roleRepository, permissionRepository);
-        bootstrapService.initializeSystem();
     }
     
     // Auth operations
@@ -89,10 +87,21 @@ public class RbacFacade {
         return userService.createUser(username, password, null);
     }
     
+    public User createUser(String username, String password, String email, String phone, String realName) {
+        return userService.createUser(username, password, null, email, phone, realName);
+    }
+    
     public User createUserWithRole(String username, String password, String roleCode) {
         Role role = roleRepository.findByCode(roleCode)
-            .orElseThrow(() -> new DataNotFoundException("Role not found: " + roleCode));
+            .orElseThrow(() -> new ValidationException("Role not found: " + roleCode));
         return userService.createUser(username, password, role.getId());
+    }
+    
+    public User createUserWithRole(String username, String password, String roleCode,
+                                   String email, String phone, String realName) {
+        Role role = roleRepository.findByCode(roleCode)
+            .orElseThrow(() -> new ValidationException("Role not found: " + roleCode));
+        return userService.createUser(username, password, role.getId(), email, phone, realName);
     }
     
     public List<User> listUsers() {
@@ -117,6 +126,11 @@ public class RbacFacade {
     
     public void disableUser(Long userId) {
         userService.setUserEnabled(userId, false);
+    }
+    
+    public void updateUserInfo(String email, String phone, String realName) {
+        Long userId = sessionContext.getCurrentUser().getId();
+        userService.updateUserInfo(userId, email, phone, realName);
     }
     
     // Role operations
@@ -248,8 +262,16 @@ public class RbacFacade {
         return resourceService.listResources();
     }
 
+    public List<Resource> listMyResources() {
+        return resourceService.listMyResources();
+    }
+
     public Resource getResource(Long resourceId) {
         return resourceService.getResource(resourceId);
+    }
+
+    public ResourceAccessView getResourceAccess(Long resourceId) {
+        return resourceService.getResourceAccess(resourceId);
     }
     
     // Audit operations

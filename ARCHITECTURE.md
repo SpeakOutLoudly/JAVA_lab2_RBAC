@@ -6,13 +6,21 @@
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                     CLI Layer (表现层)                       │
-│  ┌──────────────┐              ┌──────────────────────┐     │
-│  │ GuestState   │◄────────────►│ LoggedInState        │     │
-│  │ (登录前菜单)  │   状态切换    │ (登录后菜单)          │     │
-│  └──────────────┘              └──────────────────────┘     │
-│         │                              │                     │
-└─────────┼──────────────────────────────┼─────────────────────┘
-          │                              │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │         CliApplication (主应用)                       │   │
+│  │  ┌──────────────┐              ┌──────────────────┐  │   │
+│  │  │ GuestState   │◄────────────►│ LoggedInState    │  │   │
+│  │  │ (登录前菜单)  │   状态切换    │ (登录后菜单)      │  │   │
+│  │  └──────────────┘              └────────┬─────────┘  │   │
+│  │                                         │            │   │
+│  │                           ┌─────────────▼──────────┐ │   │
+│  │                           │  CommandHandlers       │ │   │
+│  │                           │  (7个领域处理器)        │ │   │
+│  │                           └────────────────────────┘ │   │
+│  └──────────────────────────────────────────────────────┘   │
+│         │                                                    │
+└─────────┼────────────────────────────────────────────────────┘
+          │
           └──────────────┬───────────────┘
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
@@ -26,16 +34,21 @@
 │                       │                                      │
 └───────────────────────┼──────────────────────────────────────┘
                         │
-        ┌───────────────┼───────────────┐
-        ▼               ▼               ▼
+        ┌───────────────┼───────────────┬──────────┐
+        ▼               ▼               ▼          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                  Service Layer (业务层)                      │
-│  ┌──────────┐   ┌──────────┐   ┌──────────┐                │
-│  │  Auth    │   │  User    │   │Bootstrap │                │
-│  │ Service  │   │ Service  │   │ Service  │                │
-│  └────┬─────┘   └────┬─────┘   └────┬─────┘                │
-│       │              │              │                       │
-│       └──────────────┴──────────────┘                       │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐  ┌──────────┐  │
+│  │  Auth    │   │  User    │   │  Role    │  │Permission│  │
+│  │ Service  │   │ Service  │   │ Service  │  │ Service  │  │
+│  └────┬─────┘   └────┬─────┘   └────┬─────┘  └────┬─────┘  │
+│       │              │              │             │         │
+│  ┌────┴─────┐   ┌───┴──────┐                              │
+│  │ Resource │   │  Audit   │                              │
+│  │ Service  │   │ Service  │                              │
+│  └────┬─────┘   └────┬─────┘                              │
+│       │              │              │             │         │
+│       └──────────────┴──────────────┴─────────────┘         │
 │                      │                                      │
 │              ┌───────▼───────┐                              │
 │              │ BaseService   │ ◄─ 统一模板:                 │
@@ -46,14 +59,19 @@
 │              └───────────────┘                              │
 └─────────────────────────────────────────────────────────────┘
                         │
-        ┌───────────────┼───────────────┬──────────┐
-        ▼               ▼               ▼          ▼
+        ┌───────────────┼───────────────┬──────────┬──────────┐
+        ▼               ▼               ▼          ▼          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                Repository Layer (持久层)                     │
 │  ┌────────┐  ┌────────┐  ┌──────────┐  ┌──────────┐        │
-│  │  User  │  │  Role  │  │Permission│  │ AuditLog │        │
+│  │  User  │  │  Role  │  │Permission│  │ Resource │        │
 │  │  Repo  │  │  Repo  │  │   Repo   │  │   Repo   │        │
 │  └────┬───┘  └────┬───┘  └────┬─────┘  └────┬─────┘        │
+│       │           │           │             │               │
+│       │     ┌─────┴───────┐   │             │               │
+│       │     │  AuditLog   │   │             │               │
+│       │     │    Repo     │   │             │               │
+│       │     └─────┬───────┘   │             │               │
 │       │           │           │             │               │
 │       └───────────┴───────────┴─────────────┘               │
 │                   │                                         │
@@ -66,13 +84,16 @@
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    Database (H2)                            │
-│  ┌────────┐  ┌────────┐  ┌───────────┐  ┌──────────────┐  │
-│  │ users  │  │ roles  │  │permissions│  │ audit_logs   │  │
-│  └────────┘  └────────┘  └───────────┘  └──────────────┘  │
-│  ┌──────────┐           ┌─────────────┐                    │
-│  │user_roles│           │role_perms   │                    │
-│  └──────────┘           └─────────────┘                    │
+│                    Database (MySQL)                         │
+│  ┌────────┐  ┌────────┐  ┌───────────┐  ┌─────────────┐   │
+│  │ users  │  │ roles  │  │permissions│  │ resources   │   │
+│  └────────┘  └────────┘  └───────────┘  └─────────────┘   │
+│  ┌──────────┐  ┌─────────────┐  ┌──────────────────────┐  │
+│  │user_roles│  │role_perms   │  │role_permission_scopes│  │
+│  └──────────┘  └─────────────┘  └──────────────────────┘  │
+│  ┌──────────────┐                                          │
+│  │ audit_logs   │                                          │
+│  └──────────────┘                                          │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -234,6 +255,31 @@ Command Execution
 └──────────────────────┘
 
 
+┌──────────────────────┐
+│role_permission_scopes│  (资源范围权限)
+├──────────────────────┤
+│ id (PK)              │
+│ role_id (FK)         │
+│ permission_code (FK) │
+│ resource_type        │
+│ resource_id          │
+│ scope_key            │
+│ created_at           │
+└──────────────────────┘
+
+
+┌──────────────┐          ┌──────────────┐
+│ permissions  │          │  resources   │
+├──────────────┤          ├──────────────┤
+│ id (PK)      │          │ id (PK)      │
+│ code         │          │ code         │
+│ name         │          │ name         │
+│ description  │◄─────────┤ type         │
+│ resource_id  │          │ url          │
+│ created_at   │          │ created_at   │
+└──────────────┘          └──────────────┘
+
+
 ┌──────────────┐
 │ audit_logs   │
 ├──────────────┤
@@ -253,44 +299,84 @@ Command Execution
 
 ## 4. 状态机图
 ```
-┌─────────────────┐
-│                 │  login success
-│  GuestState     ├──────────────┐
-│  (未登录)        │              │
-│                 │◄─────────┐   │
-└─────────────────┘          │   │
-                             │   │
-                          logout │
-                             │   │
-                             │   ▼
-                  ┌──────────┴────────────┐
-                  │                       │
-                  │  LoggedInState        │
-                  │  (已登录)              │
-                  │                       │
-                  │  - 显示可用命令        │
-                  │  - 权限过滤           │
-                  │  - 命令路由           │
-                  │                       │
-                  └───────────────────────┘
+                ┌─────────────────┐
+                │                 │  login success
+    ┌──────────►│  GuestState     ├──────────────┐
+    │           │  (未登录)        │              │
+    │           │                 │              │
+    │           └─────────────────┘              │
+    │                                            │
+    │                                            │
+  logout                                         │
+    │                                            │
+    │                                            ▼
+    │                  ┌─────────────────────────────────┐
+    │                  │                                 │
+    └──────────────────┤  LoggedInMenuState              │
+                       │  (已登录)                        │
+                       │                                 │
+                       │  主菜单 ⇄ 子菜单导航              │
+                       │  ├─ 用户管理                     │
+                       │  ├─ 角色管理                     │
+                       │  ├─ 权限管理                     │
+                       │  ├─ 资源管理                     │
+                       │  ├─ 审计查询                     │
+                       │  └─ 账户管理                     │
+                       │                                 │
+                       │  权限过滤 & 命令路由              │
+                       │  7个CommandHandler处理          │
+                       │                                 │
+                       └─────────────────────────────────┘
 ```
 
 ## 5. 命令-权限映射
 ```
 CommandSpec 枚举结构:
-┌─────────────────────┬───────────────────┬──────────────┐
-│ Command             │ Description       │ Permission   │
-├─────────────────────┼───────────────────┼──────────────┤
-│ login               │ User login        │ null         │
-│ logout              │ Logout            │ null         │
-│ create-user         │ Create new user   │ USER_CREATE  │
-│ list-users          │ List all users    │ USER_LIST    │
-│ view-user           │ View user details │ USER_VIEW    │
-│ assign-role         │ Assign role       │ ROLE_ASSIGN  │
-│ view-profile        │ View own profile  │ null         │
-│ change-password     │ Change password   │ null         │
-│ ...                 │ ...               │ ...          │
-└─────────────────────┴───────────────────┴──────────────┘
+┌──────────────────────────┬──────────────────────┬──────────────┐
+│ Command                  │ Description          │ Permission   │
+├──────────────────────────┼──────────────────────┼──────────────┤
+│ login                    │ User login           │ null         │
+│ logout                   │ Logout               │ null         │
+│ exit                     │ Exit                 │ null         │
+├──────────────────────────┼──────────────────────┼──────────────┤
+│ create-user              │ Create user          │ USER_CREATE  │
+│ list-users               │ List users           │ USER_LIST    │
+│ view-user                │ View user            │ USER_VIEW    │
+│ update-user              │ Update user          │ USER_UPDATE  │
+│ delete-user              │ Delete user          │ USER_DELETE  │
+├──────────────────────────┼──────────────────────┼──────────────┤
+│ create-role              │ Create role          │ ROLE_CREATE  │
+│ list-roles               │ List roles           │ ROLE_VIEW    │
+│ update-role              │ Update role          │ ROLE_UPDATE  │
+│ delete-role              │ Delete role          │ ROLE_DELETE  │
+│ assign-role              │ Assign role          │ ROLE_ASSIGN  │
+│ remove-role              │ Remove role          │ ROLE_ASSIGN  │
+├──────────────────────────┼──────────────────────┼──────────────┤
+│ create-permission        │ Create permission    │ PERM_CREATE  │
+│ list-permissions         │ List permissions     │ PERM_VIEW    │
+│ list-my-permissions      │ List my permissions  │ null         │
+│ update-permission        │ Update permission    │ PERM_UPDATE  │
+│ delete-permission        │ Delete permission    │ PERM_DELETE  │
+│ assign-permission        │ Assign permission    │ PERM_ASSIGN  │
+│ remove-permission        │ Remove permission    │ PERM_ASSIGN  │
+│ assign-resource-permission│ Grant scoped perm   │ RES_GRANT    │
+│ remove-resource-permission│ Revoke scoped perm  │ RES_GRANT    │
+├──────────────────────────┼──────────────────────┼──────────────┤
+│ create-resource          │ Create resource      │ RES_CREATE   │
+│ list-resources           │ List resources       │ RES_LIST     │
+│ view-resource            │ View resource        │ RES_VIEW     │
+│ update-resource          │ Update resource      │ RES_UPDATE   │
+│ delete-resource          │ Delete resource      │ RES_DELETE   │
+├──────────────────────────┼──────────────────────┼──────────────┤
+│ view-audit               │ View my audit        │ AUDIT_VIEW   │
+│ view-all-audit           │ View all audit       │ AUDIT_VIEW_ALL│
+│ view-user-audit          │ View user audit      │ AUDIT_VIEW_ALL│
+│ view-action-audit        │ View action audit    │ AUDIT_VIEW_ALL│
+│ view-resource-audit      │ View resource audit  │ AUDIT_VIEW_ALL│
+├──────────────────────────┼──────────────────────┼──────────────┤
+│ view-profile             │ View own profile     │ null         │
+│ change-password          │ Change password      │ null         │
+└──────────────────────────┴──────────────────────┴──────────────┘
 
 Menu显示逻辑:
 for each CommandSpec:
@@ -339,15 +425,22 @@ try {
 
 ### 7.1 外观模式 (Facade)
 ```
-CLI → RbacFacade → { AuthService, UserService, ... }
-     (简化接口)     (复杂子系统)
+CLI → RbacFacade → { AuthService, UserService, RoleService, 
+     (简化接口)     PermissionService, ResourceService, AuditService }
+                     (复杂子系统)
 ```
 
 ### 7.2 状态模式 (State)
 ```
 MenuState接口
 ├─ GuestMenuState (登录前)
+│  ├─ 显示登录菜单
+│  └─ 处理登录/退出
+│
 └─ LoggedInMenuState (登录后)
+   ├─ 显示主菜单和子菜单
+   ├─ 权限驱动菜单过滤
+   └─ 路由到CommandHandlers
 ```
 
 ### 7.3 模板方法 (Template Method)
@@ -359,11 +452,22 @@ BaseService.executeWithTemplate()
 └─ audit()              (hook)
 ```
 
-### 7.4 工厂模式 (Factory)
+### 7.4 策略模式 (Strategy)
 ```
 PasswordEncoder接口
 └─ Sha256PasswordEncoder实现
    (未来可扩展: BCryptPasswordEncoder等)
+```
+
+### 7.5 命令模式 (Command)
+```
+CommandHandler接口
+├─ AuthCommandHandler (认证相关)
+├─ UserCommandHandler (用户管理)
+├─ RoleCommandHandler (角色管理)
+├─ PermissionCommandHandler (权限管理)
+├─ ResourceCommandHandler (资源管理)
+└─ AuditCommandHandler (审计查询)
 ```
 
 ## 8. 关键设计决策
@@ -372,6 +476,7 @@ PasswordEncoder接口
 - **缓存位置**: SessionContext (内存)
 - **缓存时机**: 登录时
 - **刷新时机**: 角色/权限变更时
+- **支持范围权限**: ScopedPermission缓存(resourceType+resourceId)
 - **好处**: 避免每次操作查库,提升性能
 
 ### 8.2 事务边界
@@ -402,9 +507,10 @@ PasswordEncoder接口
 ## 10. 扩展性设计
 
 ### 10.1 水平扩展
-- Repository接口化 → 可切换数据源(MySQL/PostgreSQL)
+- Repository接口化 → 可切换数据源(当前MySQL,可切换PostgreSQL等)
 - PasswordEncoder接口化 → 可切换加密算法
 - CommandSpec枚举化 → 易于添加新命令
+- CommandHandler接口化 → 易于扩展新命令处理器
 
 ### 10.2 垂直扩展
 - BaseService模板 → 新Service继承即可

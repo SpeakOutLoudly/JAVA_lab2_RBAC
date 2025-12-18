@@ -72,6 +72,10 @@ public class SessionContext {
         return currentUser != null;
     }
     
+    public List<ScopedPermission> getScopedPermissions() {
+        return new ArrayList<>(scopedPermissions);
+    }
+    
     public void clear() {
         this.currentUser = null;
         this.globalPermissions.clear();

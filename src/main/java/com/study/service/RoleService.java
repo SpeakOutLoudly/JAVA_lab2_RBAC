@@ -4,7 +4,6 @@ import com.study.config.PermissionCodes;
 import com.study.context.SessionContext;
 import com.study.domain.Permission;
 import com.study.domain.Role;
-import com.study.exception.DataNotFoundException;
 import com.study.exception.ValidationException;
 import com.study.repository.AuditLogRepository;
 import com.study.repository.PermissionRepository;
@@ -69,7 +68,7 @@ public class RoleService extends BaseService {
                 () -> validateNotNull(roleId, "Role ID"),
                 () -> {
                     Role role = roleRepository.findById(roleId)
-                            .orElseThrow(() -> new DataNotFoundException("Role not found: " + roleId));
+                            .orElseThrow(() -> new ValidationException("Role not found: " + roleId));
                     if (name != null && !name.isBlank()) {
                         role.setName(name);
                     }
@@ -119,7 +118,7 @@ public class RoleService extends BaseService {
             code,
             () -> validateNotBlank(code, "Role code"),
             () -> roleRepository.findByCode(code)
-                .orElseThrow(() -> new DataNotFoundException("Role not found: " + code))
+                .orElseThrow(() -> new ValidationException("Role not found: " + code))
         );
     }
     

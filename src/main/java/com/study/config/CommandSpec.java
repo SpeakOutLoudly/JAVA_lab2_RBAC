@@ -37,6 +37,7 @@ public enum CommandSpec {
     // Resource commands
     CREATE_RESOURCE("create-resource", "Create resource", PermissionCodes.RESOURCE_CREATE),
     LIST_RESOURCES("list-resources", "List resources", PermissionCodes.RESOURCE_LIST),
+    LIST_MY_RESOURCES("list-my-resources", "List my resources", null),
     VIEW_RESOURCE("view-resource", "View resource detail", PermissionCodes.RESOURCE_VIEW),
     UPDATE_RESOURCE("update-resource", "Update resource", PermissionCodes.RESOURCE_UPDATE),
     DELETE_RESOURCE("delete-resource", "Delete resource", PermissionCodes.RESOURCE_DELETE),
@@ -51,6 +52,7 @@ public enum CommandSpec {
     // User self-service
     CHANGE_PASSWORD("change-password", "Change my password", null),
     VIEW_PROFILE("view-profile", "View my profile", null),
+    CHANGE_PROFILE("change-profile", "Change my profile info", PermissionCodes.CHANGE_PROFILE),
     LOGOUT("logout", "Logout", null);
 
     private final String command;

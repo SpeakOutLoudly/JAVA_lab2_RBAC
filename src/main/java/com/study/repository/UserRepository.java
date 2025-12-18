@@ -2,8 +2,7 @@ package com.study.repository;
 
 import com.study.domain.User;
 import com.study.exception.DataAccessException;
-import com.study.exception.DataNotFoundException;
-import com.study.exception.DuplicateKeyException;
+import com.study.exception.ValidationException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -30,8 +29,8 @@ public class UserRepository extends BaseRepository {
 
     public User save(Connection conn, User user) {
         String sql = """
-            INSERT INTO users (username, password_hash, salt, enabled, created_at, updated_at)
-            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            INSERT INTO users (username, password_hash, salt, enabled, email, phone, real_name, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -39,6 +38,9 @@ public class UserRepository extends BaseRepository {
             pstmt.setString(2, user.getPasswordHash());
             pstmt.setString(3, user.getSalt());
             pstmt.setBoolean(4, user.isEnabled());
+            pstmt.setString(5, user.getEmail());
+            pstmt.setString(6, user.getPhone());
+            pstmt.setString(7, user.getRealName());
 
             int affected = pstmt.executeUpdate();
             if (affected == 0) {
@@ -52,7 +54,7 @@ public class UserRepository extends BaseRepository {
             }
             return user;
         } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DuplicateKeyException("Username already exists: " + user.getUsername());
+            throw new ValidationException("Username already exists: " + user.getUsername());
         } catch (SQLException e) {
             throw new DataAccessException("Failed to save user", e);
         }
@@ -126,7 +128,8 @@ public class UserRepository extends BaseRepository {
     public void update(Connection conn, User user) {
         String sql = """
             UPDATE users SET username = ?, password_hash = ?, salt = ?,
-            enabled = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?
+            enabled = ?, email = ?, phone = ?, real_name = ?,
+            updated_at = CURRENT_TIMESTAMP WHERE id = ?
         """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -134,11 +137,14 @@ public class UserRepository extends BaseRepository {
             pstmt.setString(2, user.getPasswordHash());
             pstmt.setString(3, user.getSalt());
             pstmt.setBoolean(4, user.isEnabled());
-            pstmt.setLong(5, user.getId());
+            pstmt.setString(5, user.getEmail());
+            pstmt.setString(6, user.getPhone());
+            pstmt.setString(7, user.getRealName());
+            pstmt.setLong(8, user.getId());
 
             int affected = pstmt.executeUpdate();
             if (affected == 0) {
-                throw new DataNotFoundException("User not found: " + user.getId());
+                throw new ValidationException("User not found: " + user.getId());
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to update user", e);
@@ -161,7 +167,7 @@ public class UserRepository extends BaseRepository {
             pstmt.setLong(1, id);
             int affected = pstmt.executeUpdate();
             if (affected == 0) {
-                throw new DataNotFoundException("User not found: " + id);
+                throw new ValidationException("User not found: " + id);
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to delete user", e);
@@ -175,6 +181,9 @@ public class UserRepository extends BaseRepository {
         user.setPasswordHash(rs.getString("password_hash"));
         user.setSalt(rs.getString("salt"));
         user.setEnabled(rs.getBoolean("enabled"));
+        user.setEmail(rs.getString("email"));
+        user.setPhone(rs.getString("phone"));
+        user.setRealName(rs.getString("real_name"));
         user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
         user.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
         return user;

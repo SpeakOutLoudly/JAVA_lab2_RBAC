@@ -1,630 +1,230 @@
-2025-12-17 00:00:32.426 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 00:00:32.662 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 00:00:32.897 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 00:00:40.146 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 00:00:53.198 [main] ERROR com.study.service.UserService - Failed to execute operation, action=CREATE_USER, resourceType=User, resourceId=test, error=Username already exists: test
-2025-12-17 00:01:09.641 [main] INFO  com.study.service.UserService - User created: test2
-2025-12-17 00:02:38.710 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 00:02:38.800 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 00:02:39.035 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 00:03:05.403 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 00:04:06.580 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 00:04:06.824 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 00:04:07.053 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 00:04:21.765 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 11:12:45.782 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 11:12:45.827 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 11:12:46.064 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 11:12:54.403 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 11:14:24.813 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 11:14:30.311 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 17
-2025-12-17 11:15:13.810 [main] INFO  com.study.service.UserService - User created: test33
-2025-12-17 11:15:36.355 [main] INFO  com.study.service.UserService - User created: admin2
-2025-12-17 11:19:06.188 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 11:19:06.406 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 11:19:06.638 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 11:19:16.851 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 11:23:32.055 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 11:23:32.276 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 11:23:32.503 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 11:23:41.851 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 11:23:58.790 [main] INFO  com.study.service.UserService - Password reset for user: test
-2025-12-17 11:24:19.966 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 11:24:29.269 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 17
-2025-12-17 11:26:58.152 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 11:26:58.217 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 11:26:58.450 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 11:27:07.098 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 12:06:44.104 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 12:06:44.325 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 12:06:44.550 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 12:06:52.208 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 12:07:41.024 [main] INFO  com.study.service.RoleService - Role created: MANAGER
-2025-12-17 12:08:36.848 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=VIEW_PERMISSION, resourceType=Permission, resourceId=UPADTE_USER, error=Permission not found: UPADTE_USER
-2025-12-17 12:09:12.084 [main] INFO  com.study.service.PermissionService - Permission 1 assigned to role 3
-2025-12-17 14:58:17.270 [main] ERROR c.s.repository.DatabaseConnection - Failed to initialize database
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "    CREATE UNIQUE INDEX IF NOT EXISTS uq_role_permission_scope\000a    ON role_permission_scopes(\000a        role_id,\000a        permission_code,\000a        resource_type,\000a        COALESCE[*](resource_id, '__GLOBAL__')\000a    )\000a"; expected "ASC, DESC, NULLS, ,, )"; SQL statement:
-    CREATE UNIQUE INDEX IF NOT EXISTS uq_role_permission_scope
-    ON role_permission_scopes(
-        role_id,
-        permission_code,
-        resource_type,
-        COALESCE(resource_id, '__GLOBAL__')
-    )
- [42001-224]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.getSyntaxError(DbException.java:261)
-	at org.h2.command.ParserBase.getSyntaxError(ParserBase.java:750)
-	at org.h2.command.ParserBase.read(ParserBase.java:357)
-	at org.h2.command.ParserBase.readIfMore(ParserBase.java:625)
-	at org.h2.command.Parser.parseIndexColumnList(Parser.java:1145)
-	at org.h2.command.Parser.parseCreate(Parser.java:6477)
-	at org.h2.command.Parser.parsePrepared(Parser.java:666)
-	at org.h2.command.Parser.parse(Parser.java:592)
-	at org.h2.command.Parser.parse(Parser.java:569)
-	at org.h2.command.Parser.prepareCommand(Parser.java:483)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at com.study.repository.DatabaseConnection.createTables(DatabaseConnection.java:146)
-	at com.study.repository.DatabaseConnection.initializeDatabase(DatabaseConnection.java:48)
-	at com.study.repository.DatabaseConnection.<init>(DatabaseConnection.java:25)
-	at com.study.repository.DatabaseConnection.getInstance(DatabaseConnection.java:30)
-	at com.study.service.RbacIntegrationTest.setup(RbacIntegrationTest.java:36)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeEachMethod(TimeoutExtension.java:78)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeMethodInExtensionContext(ClassBasedTestDescriptor.java:521)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$synthesizeBeforeEachMethodAdapter$23(ClassBasedTestDescriptor.java:506)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeBeforeEachMethods$3(TestMethodTestDescriptor.java:175)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeBeforeMethodsOrCallbacksUntilExceptionOccurs$6(TestMethodTestDescriptor.java:203)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(TestMethodTestDescriptor.java:203)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeBeforeEachMethods(TestMethodTestDescriptor.java:172)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
-	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
-	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-2025-12-17 14:58:17.291 [main] ERROR c.s.repository.DatabaseConnection - Failed to initialize database
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "    CREATE UNIQUE INDEX IF NOT EXISTS uq_role_permission_scope\000a    ON role_permission_scopes(\000a        role_id,\000a        permission_code,\000a        resource_type,\000a        COALESCE[*](resource_id, '__GLOBAL__')\000a    )\000a"; expected "ASC, DESC, NULLS, ,, )"; SQL statement:
-    CREATE UNIQUE INDEX IF NOT EXISTS uq_role_permission_scope
-    ON role_permission_scopes(
-        role_id,
-        permission_code,
-        resource_type,
-        COALESCE(resource_id, '__GLOBAL__')
-    )
- [42001-224]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.getSyntaxError(DbException.java:261)
-	at org.h2.command.ParserBase.getSyntaxError(ParserBase.java:750)
-	at org.h2.command.ParserBase.read(ParserBase.java:357)
-	at org.h2.command.ParserBase.readIfMore(ParserBase.java:625)
-	at org.h2.command.Parser.parseIndexColumnList(Parser.java:1145)
-	at org.h2.command.Parser.parseCreate(Parser.java:6477)
-	at org.h2.command.Parser.parsePrepared(Parser.java:666)
-	at org.h2.command.Parser.parse(Parser.java:592)
-	at org.h2.command.Parser.parse(Parser.java:569)
-	at org.h2.command.Parser.prepareCommand(Parser.java:483)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at com.study.repository.DatabaseConnection.createTables(DatabaseConnection.java:146)
-	at com.study.repository.DatabaseConnection.initializeDatabase(DatabaseConnection.java:48)
-	at com.study.repository.DatabaseConnection.<init>(DatabaseConnection.java:25)
-	at com.study.repository.DatabaseConnection.getInstance(DatabaseConnection.java:30)
-	at com.study.service.RbacIntegrationTest.setup(RbacIntegrationTest.java:36)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeEachMethod(TimeoutExtension.java:78)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeMethodInExtensionContext(ClassBasedTestDescriptor.java:521)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$synthesizeBeforeEachMethodAdapter$23(ClassBasedTestDescriptor.java:506)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeBeforeEachMethods$3(TestMethodTestDescriptor.java:175)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeBeforeMethodsOrCallbacksUntilExceptionOccurs$6(TestMethodTestDescriptor.java:203)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(TestMethodTestDescriptor.java:203)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeBeforeEachMethods(TestMethodTestDescriptor.java:172)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
-	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
-	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-2025-12-17 14:58:17.294 [main] ERROR c.s.repository.DatabaseConnection - Failed to initialize database
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "    CREATE UNIQUE INDEX IF NOT EXISTS uq_role_permission_scope\000a    ON role_permission_scopes(\000a        role_id,\000a        permission_code,\000a        resource_type,\000a        COALESCE[*](resource_id, '__GLOBAL__')\000a    )\000a"; expected "ASC, DESC, NULLS, ,, )"; SQL statement:
-    CREATE UNIQUE INDEX IF NOT EXISTS uq_role_permission_scope
-    ON role_permission_scopes(
-        role_id,
-        permission_code,
-        resource_type,
-        COALESCE(resource_id, '__GLOBAL__')
-    )
- [42001-224]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.getSyntaxError(DbException.java:261)
-	at org.h2.command.ParserBase.getSyntaxError(ParserBase.java:750)
-	at org.h2.command.ParserBase.read(ParserBase.java:357)
-	at org.h2.command.ParserBase.readIfMore(ParserBase.java:625)
-	at org.h2.command.Parser.parseIndexColumnList(Parser.java:1145)
-	at org.h2.command.Parser.parseCreate(Parser.java:6477)
-	at org.h2.command.Parser.parsePrepared(Parser.java:666)
-	at org.h2.command.Parser.parse(Parser.java:592)
-	at org.h2.command.Parser.parse(Parser.java:569)
-	at org.h2.command.Parser.prepareCommand(Parser.java:483)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at com.study.repository.DatabaseConnection.createTables(DatabaseConnection.java:146)
-	at com.study.repository.DatabaseConnection.initializeDatabase(DatabaseConnection.java:48)
-	at com.study.repository.DatabaseConnection.<init>(DatabaseConnection.java:25)
-	at com.study.repository.DatabaseConnection.getInstance(DatabaseConnection.java:30)
-	at com.study.service.RbacIntegrationTest.setup(RbacIntegrationTest.java:36)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeEachMethod(TimeoutExtension.java:78)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeMethodInExtensionContext(ClassBasedTestDescriptor.java:521)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$synthesizeBeforeEachMethodAdapter$23(ClassBasedTestDescriptor.java:506)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeBeforeEachMethods$3(TestMethodTestDescriptor.java:175)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeBeforeMethodsOrCallbacksUntilExceptionOccurs$6(TestMethodTestDescriptor.java:203)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(TestMethodTestDescriptor.java:203)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeBeforeEachMethods(TestMethodTestDescriptor.java:172)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
-	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
-	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-2025-12-17 14:58:17.299 [main] ERROR c.s.repository.DatabaseConnection - Failed to initialize database
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "    CREATE UNIQUE INDEX IF NOT EXISTS uq_role_permission_scope\000a    ON role_permission_scopes(\000a        role_id,\000a        permission_code,\000a        resource_type,\000a        COALESCE[*](resource_id, '__GLOBAL__')\000a    )\000a"; expected "ASC, DESC, NULLS, ,, )"; SQL statement:
-    CREATE UNIQUE INDEX IF NOT EXISTS uq_role_permission_scope
-    ON role_permission_scopes(
-        role_id,
-        permission_code,
-        resource_type,
-        COALESCE(resource_id, '__GLOBAL__')
-    )
- [42001-224]
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
-	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
-	at org.h2.message.DbException.getSyntaxError(DbException.java:261)
-	at org.h2.command.ParserBase.getSyntaxError(ParserBase.java:750)
-	at org.h2.command.ParserBase.read(ParserBase.java:357)
-	at org.h2.command.ParserBase.readIfMore(ParserBase.java:625)
-	at org.h2.command.Parser.parseIndexColumnList(Parser.java:1145)
-	at org.h2.command.Parser.parseCreate(Parser.java:6477)
-	at org.h2.command.Parser.parsePrepared(Parser.java:666)
-	at org.h2.command.Parser.parse(Parser.java:592)
-	at org.h2.command.Parser.parse(Parser.java:569)
-	at org.h2.command.Parser.prepareCommand(Parser.java:483)
-	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
-	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
-	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
-	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
-	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
-	at com.study.repository.DatabaseConnection.createTables(DatabaseConnection.java:146)
-	at com.study.repository.DatabaseConnection.initializeDatabase(DatabaseConnection.java:48)
-	at com.study.repository.DatabaseConnection.<init>(DatabaseConnection.java:25)
-	at com.study.repository.DatabaseConnection.getInstance(DatabaseConnection.java:30)
-	at com.study.service.RbacIntegrationTest.setup(RbacIntegrationTest.java:36)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeEachMethod(TimeoutExtension.java:78)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeMethodInExtensionContext(ClassBasedTestDescriptor.java:521)
-	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$synthesizeBeforeEachMethodAdapter$23(ClassBasedTestDescriptor.java:506)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeBeforeEachMethods$3(TestMethodTestDescriptor.java:175)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeBeforeMethodsOrCallbacksUntilExceptionOccurs$6(TestMethodTestDescriptor.java:203)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(TestMethodTestDescriptor.java:203)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeBeforeEachMethods(TestMethodTestDescriptor.java:172)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
-	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
-	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-2025-12-17 15:01:12.936 [main] INFO  c.s.repository.DatabaseConnection - No default data found, will be initialized on first run
-2025-12-17 15:01:12.937 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 15:01:12.941 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 15:01:12.973 [main] INFO  com.study.service.BootstrapService - Created role: ADMIN
-2025-12-17 15:01:12.976 [main] INFO  com.study.service.BootstrapService - Created role: USER
-2025-12-17 15:01:13.013 [main] INFO  com.study.service.BootstrapService - Created admin user
-2025-12-17 15:01:13.013 [main] INFO  com.study.service.BootstrapService - System initialized successfully
-2025-12-17 15:01:13.013 [main] INFO  com.study.service.BootstrapService - Default admin user: admin / admin123
-2025-12-17 15:01:13.020 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 15:01:13.024 [main] INFO  com.study.service.UserService - User created: limited
-2025-12-17 15:01:13.026 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 15:01:13.028 [main] INFO  com.study.service.AuthService - User logged in: limited, permissions loaded: 7
-2025-12-17 15:01:13.033 [main] WARN  com.study.service.RoleService - User limited attempted unauthorized action: DELETE_ROLE
-2025-12-17 15:01:13.035 [main] INFO  com.study.service.AuthService - User logged out: limited
-2025-12-17 15:01:13.044 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 15:01:13.044 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 15:01:13.045 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 15:01:13.047 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 15:01:13.056 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 15:01:13.059 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 15:01:13.059 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 15:01:13.060 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 15:01:13.062 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 15:01:13.065 [main] INFO  com.study.service.RoleService - Role created: PROJECT_EDITOR
-2025-12-17 15:01:13.069 [main] INFO  com.study.service.UserService - User created: scoped-user
-2025-12-17 15:01:13.070 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 15:01:13.072 [main] INFO  com.study.service.AuthService - User logged in: scoped-user, permissions loaded: 0
-2025-12-17 15:01:13.077 [main] WARN  com.study.service.ResourceService - User scoped-user attempted unauthorized action: UPDATE_RESOURCE
-2025-12-17 15:01:13.078 [main] INFO  com.study.service.AuthService - User logged out: scoped-user
-2025-12-17 15:01:13.081 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 15:01:13.081 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 15:01:13.081 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 15:01:13.083 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 15:01:13.088 [main] ERROR com.study.service.UserService - Failed to execute operation, action=CREATE_USER, resourceType=User, resourceId=tx-user, error=Transaction failed
-2025-12-17 15:01:13.090 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 15:08:02.436 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 15:08:02.658 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 15:08:02.887 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 15:08:18.275 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 15:08:46.594 [main] ERROR com.study.service.UserService - Failed to execute operation, action=CREATE_USER, resourceType=User, resourceId=test, error=Transaction failed
-2025-12-17 15:14:31.129 [main] INFO  com.study.service.UserService - User test enabled
-2025-12-17 15:14:44.301 [main] INFO  com.study.service.UserService - User test disabled
-2025-12-17 15:21:52.282 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 15:21:52.506 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 15:21:52.733 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 15:22:07.933 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 16:39:16.032 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 16:39:16.081 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 16:39:16.317 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 16:39:25.891 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 16:41:47.348 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 16:41:47.572 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 16:41:47.795 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 16:41:54.577 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
-2025-12-17 16:42:04.931 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 16:54:40.539 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 16:54:40.597 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 16:54:40.835 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 16:54:49.364 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 16:57:35.444 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 16:57:35.494 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 16:57:35.728 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 16:57:43.355 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 16:58:43.246 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 16:58:43.472 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 16:58:43.703 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 16:58:53.208 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 17:00:03.106 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 17:00:03.328 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 17:00:03.564 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 17:00:10.780 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 17:06:12.424 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 17:06:12.683 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 17:06:12.916 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 17:06:35.267 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 17
-2025-12-17 17:12:26.561 [main] INFO  c.s.repository.DatabaseConnection - No default data found, will be initialized on first run
-2025-12-17 17:12:26.561 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 17:12:26.576 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 17:12:37.260 [main] INFO  com.study.service.BootstrapService - Created role: ADMIN
-2025-12-17 17:12:37.703 [main] INFO  com.study.service.BootstrapService - Created role: USER
-2025-12-17 17:12:46.350 [main] INFO  com.study.service.BootstrapService - Created admin user
-2025-12-17 17:12:46.351 [main] INFO  com.study.service.BootstrapService - System initialized successfully
-2025-12-17 17:12:46.351 [main] INFO  com.study.service.BootstrapService - Default admin user: admin / admin123
-2025-12-17 17:12:57.826 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 17:13:28.180 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 17:13:28.404 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 17:13:28.637 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 17:13:35.150 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 17:18:05.287 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=1, error=Role not found: 1
-2025-12-17 17:19:59.523 [main] INFO  com.study.service.PermissionService - Permission created: HAVE_BOOK
-2025-12-17 17:20:53.013 [main] INFO  com.study.service.UserService - User created: test
-2025-12-17 17:20:56.994 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 17:21:03.841 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 7
-2025-12-17 17:52:12.913 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 17:52:12.961 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 17:52:13.199 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 17:52:20.100 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 17:54:40.143 [main] INFO  c.s.repository.DatabaseConnection - No default data found, will be initialized on first run
-2025-12-17 17:54:40.144 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 17:54:40.159 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 17:54:50.878 [main] INFO  com.study.service.BootstrapService - Created role: ADMIN
-2025-12-17 17:54:51.304 [main] INFO  com.study.service.BootstrapService - Created role: USER
-2025-12-17 17:54:59.960 [main] INFO  com.study.service.BootstrapService - Created admin user
-2025-12-17 17:54:59.960 [main] INFO  com.study.service.BootstrapService - System initialized successfully
-2025-12-17 17:54:59.960 [main] INFO  com.study.service.BootstrapService - Default admin user: admin / admin123
-2025-12-17 17:56:30.713 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 17:56:56.176 [main] INFO  com.study.service.UserService - User created: test
-2025-12-17 17:57:00.198 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 17:57:06.024 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 7
-2025-12-17 19:34:20.132 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 19:34:20.351 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 19:34:20.580 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 19:34:29.107 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
-2025-12-17 19:46:13.002 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 19:46:13.052 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 19:46:13.289 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 19:49:38.965 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
-2025-12-17 19:49:45.787 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 19:50:02.449 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 19:50:08.302 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 7
-2025-12-17 20:37:11.049 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 20:37:11.132 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 20:37:11.380 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 20:57:45.822 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
-2025-12-17 20:57:59.295 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 21:13:27.291 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 21:13:27.364 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 21:13:27.610 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 21:15:04.020 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 21:17:31.782 [main] ERROR com.study.service.UserService - Failed to execute operation, action=CREATE_USER, resourceType=User, resourceId=test, error=Transaction failed
-2025-12-17 21:17:55.673 [main] INFO  com.study.service.UserService - User deleted: test
-2025-12-17 21:23:32.419 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 21:23:32.477 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 21:23:32.713 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 21:23:41.164 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 21:24:18.457 [main] INFO  com.study.service.UserService - User created: test2
-2025-12-17 21:25:41.127 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 21:25:51.098 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=test, error=User not found: test
-2025-12-17 21:26:01.977 [main] INFO  com.study.service.AuthService - User logged in: test2, permissions loaded: 7
-2025-12-17 21:26:17.493 [main] WARN  com.study.service.PermissionService - User test2 attempted unauthorized action: CREATE_PERMISSION
-2025-12-17 21:32:48.816 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 21:32:49.042 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 21:32:49.271 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 21:32:56.207 [main] INFO  com.study.service.AuthService - User logged in: test2, permissions loaded: 7
-2025-12-17 21:33:45.576 [main] INFO  com.study.service.AuthService - User logged out: test2
-2025-12-17 21:33:49.969 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 21:34:15.725 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=VIEW_PERMISSION, resourceType=Permission, resourceId=1, error=Permission not found: 1
-2025-12-17 21:34:30.089 [main] INFO  com.study.service.PermissionService - Permission 1 assigned to role 2
-2025-12-17 21:34:36.285 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 21:34:45.346 [main] INFO  com.study.service.AuthService - User logged in: test2, permissions loaded: 8
-2025-12-17 22:16:45.509 [main] INFO  c.s.repository.DatabaseConnection - No default data found, will be initialized on first run
-2025-12-17 22:16:45.509 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 22:16:45.523 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 22:16:45.796 [main] INFO  com.study.service.BootstrapService - Created role: ADMIN
-2025-12-17 22:16:45.807 [main] INFO  com.study.service.BootstrapService - Created role: USER
-2025-12-17 22:16:46.068 [main] INFO  com.study.service.BootstrapService - Created admin user
-2025-12-17 22:16:46.068 [main] INFO  com.study.service.BootstrapService - System initialized successfully
-2025-12-17 22:16:46.068 [main] INFO  com.study.service.BootstrapService - Default admin user: admin / admin123
-2025-12-17 22:17:01.490 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
-2025-12-17 22:17:10.635 [main] INFO  com.study.service.AuthService - User logged out: admin
-2025-12-17 22:22:48.353 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 22:22:48.372 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 22:22:48.386 [main] INFO  com.study.service.BootstrapService - System already initialized
-2025-12-17 22:35:39.886 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
-2025-12-17 22:35:39.912 [main] INFO  com.study.service.BootstrapService - Initializing system...
-2025-12-17 22:35:39.924 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-18 12:56:37.427 [main] ERROR c.s.repository.DatabaseConnection - Failed to initialize database
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:438)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:241)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:189)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:682)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:230)
+	at com.study.repository.DatabaseConnection.getConnection(DatabaseConnection.java:43)
+	at com.study.repository.DatabaseConnection.initializeDatabase(DatabaseConnection.java:47)
+	at com.study.repository.DatabaseConnection.<init>(DatabaseConnection.java:28)
+	at com.study.repository.DatabaseConnection.getInstance(DatabaseConnection.java:33)
+	at com.study.Main.main(Main.java:13)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:104)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:149)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:165)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:88)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:120)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:935)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:805)
+	... 10 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:589)
+	at java.base/sun.nio.ch.Net.connect(Net.java:578)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:583)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:62)
+	... 13 common frames omitted
+2025-12-18 12:57:09.107 [main] ERROR c.s.repository.DatabaseConnection - Failed to initialize database
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:438)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:241)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:189)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:682)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:230)
+	at com.study.repository.DatabaseConnection.getConnection(DatabaseConnection.java:43)
+	at com.study.repository.DatabaseConnection.initializeDatabase(DatabaseConnection.java:47)
+	at com.study.repository.DatabaseConnection.<init>(DatabaseConnection.java:28)
+	at com.study.repository.DatabaseConnection.getInstance(DatabaseConnection.java:33)
+	at com.study.Main.main(Main.java:13)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:104)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:149)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:165)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:88)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:120)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:935)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:805)
+	... 10 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:589)
+	at java.base/sun.nio.ch.Net.connect(Net.java:578)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:583)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:62)
+	... 13 common frames omitted
+2025-12-18 12:57:34.370 [main] ERROR c.s.repository.DatabaseConnection - Failed to initialize database
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:438)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:241)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:189)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:682)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:230)
+	at com.study.repository.DatabaseConnection.getConnection(DatabaseConnection.java:43)
+	at com.study.repository.DatabaseConnection.initializeDatabase(DatabaseConnection.java:47)
+	at com.study.repository.DatabaseConnection.<init>(DatabaseConnection.java:28)
+	at com.study.repository.DatabaseConnection.getInstance(DatabaseConnection.java:33)
+	at com.study.Main.main(Main.java:13)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:104)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:149)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:165)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:88)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:120)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:935)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:805)
+	... 10 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:589)
+	at java.base/sun.nio.ch.Net.connect(Net.java:578)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:583)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:62)
+	... 13 common frames omitted
+2025-12-18 13:00:39.415 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 13:00:39.447 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-18 13:00:39.460 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-18 13:00:58.032 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
+2025-12-18 13:10:19.934 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=REMOVE_PERMISSION, resourceType=RolePermission, resourceId=2-1, error=Role does not have this permission
+2025-12-18 14:53:30.599 [main] INFO  c.s.repository.DatabaseConnection - No default data found, will be initialized on first run
+2025-12-18 14:53:30.600 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 14:53:30.619 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-18 14:53:30.993 [main] INFO  com.study.service.BootstrapService - Created role: ADMIN
+2025-12-18 14:53:31.007 [main] INFO  com.study.service.BootstrapService - Created role: USER
+2025-12-18 14:53:31.356 [main] INFO  com.study.service.BootstrapService - Created admin user
+2025-12-18 14:53:31.357 [main] INFO  com.study.service.BootstrapService - System initialized successfully
+2025-12-18 14:53:31.357 [main] INFO  com.study.service.BootstrapService - Default admin user: admin / admin123
+2025-12-18 14:53:38.871 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
+2025-12-18 14:54:54.199 [main] INFO  com.study.service.UserService - User created: tester
+2025-12-18 14:55:13.843 [main] ERROR com.study.service.UserService - Failed to execute operation, action=VIEW_USER, resourceType=User, resourceId=1, error=User not found: 1
+2025-12-18 14:55:34.812 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-18 14:55:40.351 [main] INFO  com.study.service.AuthService - User logged in: tester, permissions loaded: 8
+2025-12-18 14:55:58.140 [main] INFO  com.study.service.UserService - User admin enabled
+2025-12-18 15:02:29.759 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 15:02:29.784 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-18 15:02:29.795 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-18 15:02:37.563 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
+2025-12-18 15:02:54.982 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-18 15:03:55.140 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 15:03:55.160 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-18 15:03:55.173 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-18 15:04:00.499 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 23
+2025-12-18 15:04:12.797 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-18 15:07:25.119 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 15:07:25.138 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-18 15:07:25.152 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-18 15:07:31.777 [main] INFO  com.study.service.AuthService - User logged in: tester, permissions loaded: 8
+2025-12-18 15:07:52.736 [main] INFO  c.s.repository.DatabaseConnection - No default data found, will be initialized on first run
+2025-12-18 15:07:52.737 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 15:07:52.760 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-18 15:07:53.081 [main] INFO  com.study.service.BootstrapService - Created role: ADMIN
+2025-12-18 15:07:53.092 [main] INFO  com.study.service.BootstrapService - Created role: USER
+2025-12-18 15:07:53.426 [main] INFO  com.study.service.BootstrapService - Created admin user
+2025-12-18 15:07:53.426 [main] INFO  com.study.service.BootstrapService - System initialized successfully
+2025-12-18 15:07:53.426 [main] INFO  com.study.service.BootstrapService - Default admin user: admin / admin123
+2025-12-18 15:07:58.875 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 15:09:04.811 [main] INFO  com.study.service.UserService - User created: test
+2025-12-18 15:09:13.608 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-18 15:09:17.159 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 8
+2025-12-18 15:09:32.985 [main] INFO  com.study.service.UserService - User info updated for: test
+2025-12-18 15:14:58.070 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 15:14:58.090 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-18 15:14:58.103 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-18 15:15:04.294 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 15:15:11.507 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-18 15:15:16.734 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 8
+2025-12-18 15:15:41.724 [main] INFO  com.study.service.AuthService - User logged out: test
+2025-12-18 15:15:47.627 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 15:19:45.089 [main] INFO  com.study.service.PermissionService - Permission created: HAVE_BOOK
+2025-12-18 15:20:09.016 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=HAVE_BOOK, error=Role not found: HAVE_BOOK
+2025-12-18 15:20:42.183 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=ASSIGN_SCOPED_PERMISSION, resourceType=1, resourceId=null, error=Scoped permission already exists for this role
+2025-12-18 15:22:42.859 [main] INFO  com.study.service.PermissionService - Permission 25 assigned to role 2
+2025-12-18 15:23:09.981 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-18 15:23:14.070 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 9
+2025-12-18 15:26:49.417 [main] INFO  com.study.service.AuthService - User logged out: test
+2025-12-18 15:26:58.783 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 16:23:47.396 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 16:23:47.419 [main] INFO  com.study.service.BootstrapService - Initializing system...
+2025-12-18 16:23:47.433 [main] INFO  com.study.service.BootstrapService - System already initialized
+2025-12-18 16:23:58.808 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 17:03:18.505 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 17:03:18.547 [main] INFO  c.s.repository.DatabaseConnection - System already initialized
+2025-12-18 17:26:38.351 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 17:26:38.394 [main] INFO  c.s.repository.DatabaseConnection - System already initialized
+2025-12-18 17:26:46.303 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 17:27:25.005 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-18 17:27:29.621 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 9
+2025-12-18 17:33:51.154 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 17:33:51.184 [main] INFO  c.s.repository.DatabaseConnection - System already initialized
+2025-12-18 17:33:58.027 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 9
+2025-12-18 17:36:22.330 [main] INFO  com.study.service.AuthService - User logged out: test
+2025-12-18 17:36:27.953 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 17:37:03.915 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=ASSIGN_SCOPED_PERMISSION, resourceType=1, resourceId=1, error=Scoped permission already exists for this role
+2025-12-18 17:37:32.209 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=ASSIGN_SCOPED_PERMISSION, resourceType=1, resourceId=1, error=Scoped permission already exists for this role
+2025-12-18 17:43:28.811 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 17:43:28.845 [main] INFO  c.s.repository.DatabaseConnection - System already initialized
+2025-12-18 17:43:33.381 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 9
+2025-12-18 17:45:22.010 [main] INFO  com.study.service.AuthService - User logged out: test
+2025-12-18 17:45:26.293 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 17:46:18.283 [main] INFO  com.study.service.PermissionService - Permission created: HAVE_GPU
+2025-12-18 17:46:30.581 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-18 17:46:34.209 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 9
+2025-12-18 17:46:46.844 [main] INFO  com.study.service.AuthService - User logged out: test
+2025-12-18 17:46:51.738 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 17:48:42.471 [main] INFO  com.study.service.PermissionService - Permission 26 assigned to role 2
+2025-12-18 17:48:46.103 [main] INFO  com.study.service.AuthService - User logged out: admin
+2025-12-18 17:48:51.006 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 10
+2025-12-18 17:54:37.081 [main] INFO  c.s.repository.DatabaseConnection - Database initialized successfully
+2025-12-18 17:54:37.116 [main] INFO  c.s.repository.DatabaseConnection - System already initialized
+2025-12-18 17:54:42.098 [main] INFO  com.study.service.AuthService - User logged in: test, permissions loaded: 10
+2025-12-18 17:55:04.008 [main] INFO  com.study.service.AuthService - User logged out: test
+2025-12-18 17:55:09.734 [main] INFO  com.study.service.AuthService - User logged in: admin, permissions loaded: 24
+2025-12-18 17:55:35.675 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=HAVE_BOOK, error=Role not found: HAVE_BOOK
+2025-12-18 17:56:43.350 [main] INFO  com.study.service.PermissionService - Permission 25 assigned to role 1
+2025-12-18 17:56:54.421 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=VIEW_PERMISSION, resourceType=Permission, resourceId=HAVE_CPU, error=Permission not found: HAVE_CPU
+2025-12-18 17:57:05.327 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=HAVE_GPU, error=Role not found: HAVE_GPU
+2025-12-18 17:57:14.715 [main] INFO  com.study.service.PermissionService - Permission 26 assigned to role 1
+2025-12-18 17:58:08.338 [main] INFO  com.study.service.PermissionService - Permission 25 removed from role 1

@@ -4,7 +4,6 @@ import com.study.config.PermissionCodes;
 import com.study.context.SessionContext;
 import com.study.domain.Permission;
 import com.study.domain.ScopedPermission;
-import com.study.exception.DataNotFoundException;
 import com.study.exception.ValidationException;
 import com.study.repository.AuditLogRepository;
 import com.study.repository.PermissionRepository;
@@ -65,7 +64,7 @@ public class PermissionService extends BaseService {
                 () -> validateNotBlank(code, "Permission code"),
                 () -> {
                     Permission permission = permissionRepository.findByCode(code)
-                            .orElseThrow(() -> new DataNotFoundException("Permission not found: " + code));
+                            .orElseThrow(() -> new ValidationException("Permission not found: " + code));
                     if (name != null && !name.isBlank()) {
                         permission.setName(name);
                     }
@@ -91,7 +90,7 @@ public class PermissionService extends BaseService {
                 () -> validateNotBlank(code, "Permission code"),
                 () -> {
                     Permission permission = permissionRepository.findByCode(code)
-                            .orElseThrow(() -> new DataNotFoundException("Permission not found: " + code));
+                            .orElseThrow(() -> new ValidationException("Permission not found: " + code));
                     permissionRepository.delete(permission.getId());
                     logger.info("Permission deleted: {}", code);
                 }
@@ -140,7 +139,7 @@ public class PermissionService extends BaseService {
             code,
             () -> validateNotBlank(code, "Permission code"),
             () -> permissionRepository.findByCode(code)
-                .orElseThrow(() -> new DataNotFoundException("Permission not found: " + code))
+                .orElseThrow(() -> new ValidationException("Permission not found: " + code))
         );
     }
     

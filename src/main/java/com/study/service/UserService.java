@@ -3,7 +3,6 @@ package com.study.service;
 import com.study.config.PermissionCodes;
 import com.study.context.SessionContext;
 import com.study.domain.User;
-import com.study.exception.DataNotFoundException;
 import com.study.exception.ValidationException;
 import com.study.repository.AuditLogRepository;
 import com.study.repository.RoleRepository;
@@ -35,6 +34,14 @@ public class UserService extends BaseService {
      * Create new user with optional default role assignment
      */
     public User createUser(String username, String password, Long defaultRoleId) {
+        return createUser(username, password, defaultRoleId, null, null, null);
+    }
+    
+    /**
+     * Create new user with optional default role assignment and user info
+     */
+    public User createUser(String username, String password, Long defaultRoleId, 
+                          String email, String phone, String realName) {
         return executeWithTemplate(
             PermissionCodes.USER_CREATE,
             "CREATE_USER",
@@ -49,6 +56,14 @@ public class UserService extends BaseService {
                 if (username.length() < 3 || username.length() > 50) {
                     throw new ValidationException("Username must be between 3 and 50 characters");
                 }
+                // Email validation
+                if (email != null && !email.isBlank() && !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                    throw new ValidationException("Invalid email format");
+                }
+                // Phone validation
+                if (phone != null && !phone.isBlank() && !phone.matches("^[0-9+\\-() ]{6,20}$")) {
+                    throw new ValidationException("Invalid phone format");
+                }
             },
             () -> {
                 // Create user with hashed password
@@ -60,6 +75,9 @@ public class UserService extends BaseService {
                 user.setPasswordHash(passwordHash);
                 user.setSalt(salt);
                 user.setEnabled(true);
+                user.setEmail(email);
+                user.setPhone(phone);
+                user.setRealName(realName);
                 
                 User savedUser = userRepository.executeInTransaction(conn -> {
                     User persisted = userRepository.save(conn, user);
@@ -101,7 +119,7 @@ public class UserService extends BaseService {
             String.valueOf(userId),
             () -> validateNotNull(userId, "User ID"),
             () -> userRepository.findById(userId)
-                .orElseThrow(() -> new DataNotFoundException("User not found: " + userId))
+                .orElseThrow(() -> new ValidationException("User not found: " + userId))
         );
     }
     
@@ -116,7 +134,7 @@ public class UserService extends BaseService {
             username,
             () -> validateNotBlank(username, "Username"),
             () -> userRepository.findByUsername(username)
-                .orElseThrow(() -> new DataNotFoundException("User not found: " + username))
+                .orElseThrow(() -> new ValidationException("User not found: " + username))
         );
     }
     
@@ -132,7 +150,7 @@ public class UserService extends BaseService {
             () -> validateNotNull(userId, "User ID"),
             () -> {
                 User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new DataNotFoundException("User not found: " + userId));
+                    .orElseThrow(() -> new ValidationException("User not found: " + userId));
                 
                 user.setEnabled(enabled);
                 userRepository.update(user);
@@ -154,7 +172,7 @@ public class UserService extends BaseService {
             () -> validateNotNull(userId, "User ID"),
             () -> {
                 User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new DataNotFoundException("User not found: " + userId));
+                    .orElseThrow(() -> new ValidationException("User not found: " + userId));
                 
                 userRepository.delete(userId);
                 logger.info("User deleted: {}", user.getUsername());
@@ -180,7 +198,7 @@ public class UserService extends BaseService {
             },
             () -> {
                 User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new DataNotFoundException("User not found: " + userId));
+                    .orElseThrow(() -> new ValidationException("User not found: " + userId));
                 
                 String newSalt = passwordEncoder.generateSalt();
                 String newHash = passwordEncoder.encode(newPassword, newSalt);
@@ -189,6 +207,46 @@ public class UserService extends BaseService {
                 
                 userRepository.update(user);
                 logger.info("Password reset for user: {}", user.getUsername());
+            }
+        );
+    }
+    
+    /**
+     * Update user information (email, phone, realName) - for users to change their own profile
+     */
+    public void updateUserInfo(Long userId, String email, String phone, String realName) {
+        executeWithTemplate(
+            PermissionCodes.CHANGE_PROFILE,
+            "UPDATE_USER_INFO",
+            "User",
+            String.valueOf(userId),
+            () -> {
+                validateNotNull(userId, "User ID");
+                // Email validation
+                if (email != null && !email.isBlank() && !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                    throw new ValidationException("Invalid email format");
+                }
+                // Phone validation (optional: simple format check)
+                if (phone != null && !phone.isBlank() && !phone.matches("^[0-9+\\-() ]{6,20}$")) {
+                    throw new ValidationException("Invalid phone format");
+                }
+            },
+            () -> {
+                User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new ValidationException("User not found: " + userId));
+                
+                if (email != null && !email.isBlank()) {
+                    user.setEmail(email);
+                }
+                if (phone != null && !phone.isBlank()) {
+                    user.setPhone(phone);
+                }
+                if (realName != null && !realName.isBlank()) {
+                    user.setRealName(realName);
+                }
+                
+                userRepository.update(user);
+                logger.info("User info updated for: {}", user.getUsername());
             }
         );
     }

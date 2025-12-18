@@ -2,9 +2,10 @@ package com.study.repository;
 
 import com.study.domain.Permission;
 import com.study.domain.ScopedPermission;
+import com.study.service.dto.ResourceRoleScope;
+import com.study.service.dto.ResourceUserScope;
 import com.study.exception.DataAccessException;
-import com.study.exception.DataNotFoundException;
-import com.study.exception.DuplicateKeyException;
+import com.study.exception.ValidationException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class PermissionRepository extends BaseRepository {
             }
             return permission;
         } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DuplicateKeyException("Permission code already exists: " + permission.getCode());
+            throw new ValidationException("Permission code already exists: " + permission.getCode());
         } catch (SQLException e) {
             throw new DataAccessException("Failed to save permission", e);
         }
@@ -76,7 +77,7 @@ public class PermissionRepository extends BaseRepository {
             }
             pstmt.setString(4, permission.getCode());
             if (pstmt.executeUpdate() == 0) {
-                throw new DataNotFoundException("Permission not found: " + permission.getCode());
+                throw new ValidationException("Permission not found: " + permission.getCode());
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to update permission", e);
@@ -97,7 +98,7 @@ public class PermissionRepository extends BaseRepository {
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, permissionId);
             if (pstmt.executeUpdate() == 0) {
-                throw new DataNotFoundException("Permission not found: " + permissionId);
+                throw new ValidationException("Permission not found: " + permissionId);
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to delete permission", e);
@@ -216,7 +217,7 @@ public class PermissionRepository extends BaseRepository {
             pstmt.setLong(2, permissionId);
             pstmt.executeUpdate();
         } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DuplicateKeyException("Role already has this permission");
+            throw new ValidationException("Role already has this permission");
         } catch (SQLException e) {
             throw new DataAccessException("Failed to assign permission", e);
         }
@@ -237,7 +238,7 @@ public class PermissionRepository extends BaseRepository {
             pstmt.setLong(1, roleId);
             pstmt.setLong(2, permissionId);
             if (pstmt.executeUpdate() == 0) {
-                throw new DataNotFoundException("Role does not have this permission");
+                throw new ValidationException("Role does not have this permission");
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to remove permission", e);
@@ -272,7 +273,7 @@ public class PermissionRepository extends BaseRepository {
             pstmt.setString(5, scopeKey);
             pstmt.executeUpdate();
         } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DuplicateKeyException("Scoped permission already exists for this role");
+            throw new ValidationException("Scoped permission already exists for this role");
         } catch (SQLException e) {
             throw new DataAccessException("Failed to assign scoped permission", e);
         }
@@ -300,7 +301,7 @@ public class PermissionRepository extends BaseRepository {
             pstmt.setString(3, resourceType);
             pstmt.setString(4, scopeKey);
             if (pstmt.executeUpdate() == 0) {
-                throw new DataNotFoundException("Scoped permission not found for role");
+                throw new ValidationException("Scoped permission not found for role");
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to remove scoped permission", e);
@@ -349,6 +350,74 @@ public class PermissionRepository extends BaseRepository {
         } catch (SQLException e) {
             logger.error("Failed to find scoped permissions for role", e);
             throw new DataAccessException("Failed to find scoped permissions for role", e);
+        }
+    }
+
+    /**
+     * Find roles that have scoped permissions for a specific resource
+     */
+    public List<ResourceRoleScope> findRoleScopesByResource(Long resourceId) {
+        String sql = """
+            SELECT r.code AS role_code,
+                   s.permission_code,
+                   s.resource_id AS scope_key
+            FROM role_permission_scopes s
+            JOIN roles r ON s.role_id = r.id
+            WHERE s.resource_type = 'RESOURCE'
+              AND s.resource_id = ?
+        """;
+        List<ResourceRoleScope> roleScopes = new ArrayList<>();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, String.valueOf(resourceId));
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ResourceRoleScope scope = new ResourceRoleScope();
+                scope.setRoleCode(rs.getString("role_code"));
+                scope.setPermissionCode(rs.getString("permission_code"));
+                scope.setScopeKey(rs.getString("scope_key"));
+                roleScopes.add(scope);
+            }
+            return roleScopes;
+        } catch (SQLException e) {
+            logger.error("Failed to find role scopes by resource", e);
+            throw new DataAccessException("Failed to find role scopes by resource", e);
+        }
+    }
+
+    /**
+     * Find users that have scoped permissions for a specific resource
+     */
+    public List<ResourceUserScope> findUserScopesByResource(Long resourceId) {
+        String sql = """
+            SELECT DISTINCT u.username AS username,
+                   r.code AS role_code,
+                   s.permission_code
+            FROM role_permission_scopes s
+            JOIN roles r ON s.role_id = r.id
+            JOIN user_roles ur ON ur.role_id = r.id
+            JOIN users u ON ur.user_id = u.id
+            WHERE s.resource_type = 'RESOURCE'
+              AND s.resource_id = ?
+        """;
+        List<ResourceUserScope> userScopes = new ArrayList<>();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, String.valueOf(resourceId));
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ResourceUserScope scope = new ResourceUserScope();
+                scope.setUsername(rs.getString("username"));
+                scope.setRoleCode(rs.getString("role_code"));
+                scope.setPermissionCode(rs.getString("permission_code"));
+                userScopes.add(scope);
+            }
+            return userScopes;
+        } catch (SQLException e) {
+            logger.error("Failed to find user scopes by resource", e);
+            throw new DataAccessException("Failed to find user scopes by resource", e);
         }
     }
 

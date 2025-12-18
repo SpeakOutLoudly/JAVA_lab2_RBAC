@@ -2,8 +2,7 @@ package com.study.repository;
 
 import com.study.domain.Role;
 import com.study.exception.DataAccessException;
-import com.study.exception.DataNotFoundException;
-import com.study.exception.DuplicateKeyException;
+import com.study.exception.ValidationException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class RoleRepository extends BaseRepository {
             }
             return role;
         } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DuplicateKeyException("Role code already exists: " + role.getCode());
+            throw new ValidationException("Role code already exists: " + role.getCode());
         } catch (SQLException e) {
             throw new DataAccessException("Failed to save role", e);
         }
@@ -66,7 +65,7 @@ public class RoleRepository extends BaseRepository {
             pstmt.setString(2, role.getDescription());
             pstmt.setLong(3, role.getId());
             if (pstmt.executeUpdate() == 0) {
-                throw new DataNotFoundException("Role not found: " + role.getId());
+                throw new ValidationException("Role not found: " + role.getId());
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to update role", e);
@@ -87,7 +86,7 @@ public class RoleRepository extends BaseRepository {
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, roleId);
             if (pstmt.executeUpdate() == 0) {
-                throw new DataNotFoundException("Role not found: " + roleId);
+                throw new ValidationException("Role not found: " + roleId);
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to delete role", e);
@@ -183,7 +182,7 @@ public class RoleRepository extends BaseRepository {
             pstmt.setLong(2, roleId);
             pstmt.executeUpdate();
         } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DuplicateKeyException("User already has this role");
+            throw new ValidationException("User already has this role");
         } catch (SQLException e) {
             throw new DataAccessException("Failed to assign role", e);
         }
@@ -204,7 +203,7 @@ public class RoleRepository extends BaseRepository {
             pstmt.setLong(1, userId);
             pstmt.setLong(2, roleId);
             if (pstmt.executeUpdate() == 0) {
-                throw new DataNotFoundException("User does not have this role");
+                throw new ValidationException("User does not have this role");
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed to remove role", e);

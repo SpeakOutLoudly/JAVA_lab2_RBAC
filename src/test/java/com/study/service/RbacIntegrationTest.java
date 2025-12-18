@@ -34,14 +34,13 @@ class RbacIntegrationTest {
         DatabaseConnection.reset();
         System.setProperty("rbac.db.url", "jdbc:h2:mem:rbacTest;MODE=MySQL;DB_CLOSE_DELAY=-1");
         DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+        dbConnection.initializeDefaults();
 
         userRepository = new UserRepository(dbConnection);
         roleRepository = new RoleRepository(dbConnection);
         permissionRepository = new PermissionRepository(dbConnection);
         resourceRepository = new ResourceRepository(dbConnection);
         auditLogRepository = new AuditLogRepository(dbConnection);
-
-        new BootstrapService(userRepository, roleRepository, permissionRepository).initializeSystem();
 
         sessionContext = new SessionContext();
         authService = new AuthService(sessionContext, userRepository, permissionRepository, auditLogRepository);

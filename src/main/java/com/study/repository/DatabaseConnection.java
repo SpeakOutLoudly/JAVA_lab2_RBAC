@@ -1,5 +1,11 @@
 package com.study.repository;
 
+import com.study.config.PermissionCodes;
+import com.study.domain.Permission;
+import com.study.domain.Role;
+import com.study.domain.User;
+import com.study.security.PasswordEncoder;
+import com.study.security.Sha256PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,6 +13,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 /**
  * Database connection manager using MySQL
@@ -23,9 +30,11 @@ public class DatabaseConnection {
     private static DatabaseConnection instance;
     private final String dbUrl;
     
+    private final PasswordEncoder passwordEncoder = new Sha256PasswordEncoder();
+
     private DatabaseConnection() {
         this.dbUrl = System.getProperty("rbac.db.url", DEFAULT_DB_URL);
-        initializeDatabase();
+        initializeSchema();
     }
     
     public static synchronized DatabaseConnection getInstance() {
@@ -43,15 +52,12 @@ public class DatabaseConnection {
         return DriverManager.getConnection(dbUrl, DB_USER, DB_PASSWORD);
     }
     
-    private void initializeDatabase() {
+    private void initializeSchema() {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
             
             // Create tables
             createTables(stmt);
-            // Initialize default data
-            initializeDefaultData(stmt);
-            
             logger.info("Database initialized successfully");
         } catch (SQLException e) {
             logger.error("Failed to initialize database", e);
@@ -68,6 +74,9 @@ public class DatabaseConnection {
                 password_hash VARCHAR(255) NOT NULL,
                 salt VARCHAR(255) NOT NULL,
                 enabled BOOLEAN DEFAULT TRUE,
+                email VARCHAR(100),
+                phone VARCHAR(20),
+                real_name VARCHAR(100),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
@@ -166,12 +175,116 @@ public class DatabaseConnection {
         """);
     }
     
-    private void initializeDefaultData(Statement stmt) throws SQLException {
-        // Check if admin user exists
-        var rs = stmt.executeQuery("SELECT COUNT(*) FROM users WHERE username = 'admin'");
-        if (rs.next() && rs.getInt(1) == 0) {
-            // Will be initialized by bootstrap service
-            logger.info("No default data found, will be initialized on first run");
+    /**
+     * Initialize default roles/permissions/admin user.
+     * Idempotent: safe to call multiple times.
+     */
+    public void initializeDefaults() {
+        UserRepository userRepository = new UserRepository(this);
+        RoleRepository roleRepository = new RoleRepository(this);
+        PermissionRepository permissionRepository = new PermissionRepository(this);
+
+        Optional<User> adminOpt = userRepository.findByUsername("admin");
+        if (adminOpt.isPresent()) {
+            logger.info("System already initialized");
+            return;
         }
+
+        logger.info("Initializing system defaults...");
+        createDefaultPermissions(permissionRepository);
+        Role adminRole = ensureRole(roleRepository, "ADMIN", "Administrator", "Full system access");
+        Role userRole = ensureRole(roleRepository, "USER", "Regular User", "Basic user access");
+
+        assignAllPermissionsToRole(permissionRepository, adminRole.getId());
+        assignBasicPermissionsToRole(permissionRepository, userRole.getId());
+        createAdminUser(userRepository, roleRepository, adminRole.getId());
+
+        logger.info("Default data initialized. Admin: admin / admin123");
+    }
+
+    private void createDefaultPermissions(PermissionRepository permissionRepository) {
+        String[] permissionCodes = {
+                PermissionCodes.USER_CREATE, PermissionCodes.USER_UPDATE,
+                PermissionCodes.USER_DELETE, PermissionCodes.USER_VIEW,
+                PermissionCodes.USER_LIST, PermissionCodes.CHANGE_PROFILE,
+                PermissionCodes.ROLE_CREATE, PermissionCodes.ROLE_UPDATE,
+                PermissionCodes.ROLE_DELETE, PermissionCodes.ROLE_VIEW,
+                PermissionCodes.ROLE_ASSIGN,
+                PermissionCodes.PERMISSION_CREATE, PermissionCodes.PERMISSION_UPDATE,
+                PermissionCodes.PERMISSION_DELETE, PermissionCodes.PERMISSION_VIEW,
+                PermissionCodes.PERMISSION_ASSIGN,
+                PermissionCodes.RESOURCE_CREATE, PermissionCodes.RESOURCE_UPDATE,
+                PermissionCodes.RESOURCE_DELETE, PermissionCodes.RESOURCE_VIEW,
+                PermissionCodes.RESOURCE_LIST, PermissionCodes.RESOURCE_GRANT,
+                PermissionCodes.AUDIT_VIEW, PermissionCodes.AUDIT_VIEW_ALL
+        };
+
+        for (String code : permissionCodes) {
+            if (permissionRepository.findByCode(code).isEmpty()) {
+                Permission permission = new Permission();
+                permission.setCode(code);
+                permission.setName(code.replace("_", " "));
+                permission.setDescription("Permission for " + code);
+                permissionRepository.save(permission);
+                logger.debug("Created permission: {}", code);
+            }
+        }
+    }
+
+    private Role ensureRole(RoleRepository roleRepository, String code, String name, String description) {
+        Optional<Role> existing = roleRepository.findByCode(code);
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+        Role role = new Role();
+        role.setCode(code);
+        role.setName(name);
+        role.setDescription(description);
+        return roleRepository.save(role);
+    }
+
+    private void assignAllPermissionsToRole(PermissionRepository permissionRepository, Long roleId) {
+        var allPermissions = permissionRepository.findAll();
+        for (Permission permission : allPermissions) {
+            try {
+                permissionRepository.assignPermissionToRole(roleId, permission.getId());
+            } catch (Exception ignored) {
+                // ignore duplicates
+            }
+        }
+    }
+
+    private void assignBasicPermissionsToRole(PermissionRepository permissionRepository, Long roleId) {
+        String[] basicCodes = {
+                PermissionCodes.USER_VIEW, PermissionCodes.USER_LIST,
+                PermissionCodes.CHANGE_PROFILE,
+                PermissionCodes.ROLE_VIEW, PermissionCodes.PERMISSION_VIEW,
+                PermissionCodes.AUDIT_VIEW,
+                PermissionCodes.RESOURCE_VIEW,
+                PermissionCodes.RESOURCE_LIST
+        };
+
+        for (String code : basicCodes) {
+            permissionRepository.findByCode(code).ifPresent(permission -> {
+                try {
+                    permissionRepository.assignPermissionToRole(roleId, permission.getId());
+                } catch (Exception ignored) {
+                }
+            });
+        }
+    }
+
+    private void createAdminUser(UserRepository userRepository, RoleRepository roleRepository, Long adminRoleId) {
+        String salt = passwordEncoder.generateSalt();
+        String passwordHash = passwordEncoder.encode("admin123", salt);
+
+        User admin = new User();
+        admin.setUsername("admin");
+        admin.setPasswordHash(passwordHash);
+        admin.setSalt(salt);
+        admin.setEnabled(true);
+
+        User saved = userRepository.save(admin);
+        roleRepository.assignRoleToUser(saved.getId(), adminRoleId);
     }
 }

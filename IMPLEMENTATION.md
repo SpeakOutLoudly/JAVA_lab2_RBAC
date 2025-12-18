@@ -8,15 +8,15 @@
 
 ### 1. 分层架构 (Layered Architecture)
 ```
-CLI层 (Main.java + State Pattern)
+CLI层 (CliApplication + MenuState + CommandHandler)
     ↓
 Facade层 (RbacFacade)
     ↓
-Service层 (AuthService, UserService等)
+Service层 (AuthService, UserService, RoleService, PermissionService, ResourceService等)
     ↓
 Repository层 (BaseRepository + 具体Repository)
     ↓
-数据库层 (H2 Database)
+数据库层 (MySQL)
 ```
 
 ### 2. 统一服务模板 (Unified Service Template)
@@ -28,6 +28,7 @@ Repository层 (BaseRepository + 具体Repository)
 
 ### 3. 权限缓存机制
 - 登录时计算用户的有效权限集并缓存到`SessionContext`
+- 支持资源范围权限(ScopedPermission)的缓存和检查
 - 角色/权限变更时刷新缓存
 - 避免频繁查库提升性能
 
@@ -50,6 +51,7 @@ Repository层 (BaseRepository + 具体Repository)
 - SHA-256 + 随机salt
 - 每用户独立salt
 - 密码明文永不存储和记录
+- 策略模式支持多种加密算法
 
 ### 8. 异常体系
 ```
@@ -57,51 +59,87 @@ RbacException (基类)
 ├── PermissionDeniedException (权限拒绝)
 ├── ValidationException (参数校验)
 ├── DataNotFoundException (数据不存在)
-├── DuplicateDataException (数据重复)
-└── PersistenceException (持久化错误)
+├── DuplicateKeyException (数据重复)
+└── DataAccessException (持久化错误)
 ```
+
+### 9. CLI交互模式
+- **层级菜单**: 主菜单 → 子菜单(用户/角色/权限/资源/审计/账户)
+- **数字导航**: 输入数字选择菜单项,0返回上级或退出
+- **权限驱动**: 根据用户权限动态显示可用菜单
+- **命令处理器**: 7个Handler按领域分类处理命令
+- **状态模式**: GuestMenuState(登录前) ↔ LoggedInMenuState(登录后)
+
+### 10. 资源权限范围控制
+- **ScopedPermission**: 支持将权限限定在特定资源范围
+- **role_permission_scopes表**: 存储角色的资源范围权限
+- **灵活授权**: 可授予全局权限或特定资源的权限
+- **细粒度控制**: resourceType + resourceId实现精确授权
 
 ## 目录结构
 
 ```
 src/main/java/com/study/
+├── cli/
+│   ├── handler/
+│   │   ├── CommandHandler.java       # 命令处理器接口
+│   │   ├── AuthCommandHandler.java   # 认证相关命令
+│   │   ├── UserCommandHandler.java   # 用户管理命令
+│   │   ├── RoleCommandHandler.java   # 角色管理命令
+│   │   ├── PermissionCommandHandler.java  # 权限管理命令
+│   │   ├── ResourceCommandHandler.java    # 资源管理命令
+│   │   └── AuditCommandHandler.java  # 审计查询命令
+│   ├── state/
+│   │   ├── MenuState.java            # 菜单状态接口
+│   │   ├── GuestMenuState.java       # 登录前菜单
+│   │   └── LoggedInMenuState.java    # 登录后菜单
+│   └── CliApplication.java           # CLI应用主类
+├── common/
+│   └── util/
+│       └── InputUtils.java           # 输入工具类
 ├── config/
-│   ├── CommandSpec.java          # 命令规格(命令-权限映射)
-│   └── PermissionCodes.java      # 权限代码常量
+│   ├── CommandSpec.java              # 命令规格(命令-权限映射)
+│   └── PermissionCodes.java          # 权限代码常量
 ├── context/
-│   └── SessionContext.java       # 会话上下文(用户+权限缓存)
+│   └── SessionContext.java           # 会话上下文(用户+权限缓存)
 ├── domain/
 │   ├── User.java
 │   ├── Role.java
 │   ├── Permission.java
 │   ├── Resource.java
+│   ├── ScopedPermission.java         # 资源范围权限
 │   └── AuditLog.java
 ├── exception/
 │   ├── RbacException.java
 │   ├── PermissionDeniedException.java
 │   ├── ValidationException.java
 │   ├── DataNotFoundException.java
-│   ├── DuplicateDataException.java
-│   └── PersistenceException.java
+│   ├── DuplicateKeyException.java
+│   └── DataAccessException.java
 ├── facade/
-│   └── RbacFacade.java           # 外观模式,简化CLI调用
+│   └── RbacFacade.java               # 外观模式,简化CLI调用
 ├── repository/
-│   ├── DatabaseConnection.java   # 数据库连接+表初始化
-│   ├── BaseRepository.java       # Repository基类(事务模板)
+│   ├── DatabaseConnection.java       # 数据库连接+表初始化(MySQL)
+│   ├── BaseRepository.java           # Repository基类(事务模板)
 │   ├── UserRepository.java
 │   ├── RoleRepository.java
 │   ├── PermissionRepository.java
+│   ├── ResourceRepository.java
 │   └── AuditLogRepository.java
 ├── security/
-│   ├── PasswordEncoder.java      # 密码编码器接口
-│   ├── Sha256PasswordEncoder.java # SHA-256实现
-│   └── DataMasker.java           # 敏感数据脱敏工具
+│   ├── PasswordEncoder.java          # 密码编码器接口
+│   ├── Sha256PasswordEncoder.java    # SHA-256实现
+│   └── DataMasker.java               # 敏感数据脱敏工具
 ├── service/
-│   ├── BaseService.java          # Service基类(统一模板)
-│   ├── AuthService.java          # 认证授权服务
-│   ├── UserService.java          # 用户管理服务
-│   └── BootstrapService.java     # 系统初始化服务
-└── Main.java                     # CLI入口(状态模式)
+│   ├── BaseService.java              # Service基类(统一模板)
+│   ├── AuthService.java              # 认证授权服务
+│   ├── UserService.java              # 用户管理服务
+│   ├── RoleService.java              # 角色管理服务
+│   ├── PermissionService.java        # 权限管理服务
+│   ├── ResourceService.java          # 资源管理服务
+│   ├── AuditService.java             # 审计查询服务
+│   └── （已移除，初始化内置在 DatabaseConnection.initializeDefaults）
+└── Main.java                         # 程序入口
 ```
 
 ## 数据库设计
@@ -113,6 +151,7 @@ src/main/java/com/study/
 - `resources` - 资源表
 - `user_roles` - 用户-角色关联
 - `role_permissions` - 角色-权限关联
+- `role_permission_scopes` - 角色资源权限范围表
 - `audit_logs` - 审计日志表
 
 ### 关系
@@ -176,19 +215,22 @@ executeInTransaction(conn -> {
 1. **外观模式** - `RbacFacade`封装复杂子系统
 2. **状态模式** - `MenuState`管理登录前后菜单
 3. **模板方法** - `BaseService.executeWithTemplate`固化执行流程
-4. **工厂模式** - `PasswordEncoder`接口支持多种加密算法
-5. **单例模式** - `DatabaseConnection`单例管理连接
+4. **策略模式** - `PasswordEncoder`接口支持多种加密算法
+5. **命令模式** - `CommandHandler`接口及7个具体处理器
+6. **单例模式** - `DatabaseConnection`单例管理连接
 
 ## 扩展点
 
 ### 添加新命令
 1. 在`PermissionCodes`添加新权限常量
 2. 在`CommandSpec`添加新命令枚举
-3. 在`BootstrapService`初始化新权限
-4. 在`LoggedInMenuState`添加命令处理方法
+3. 在`DatabaseConnection.initializeDefaults`初始化新权限并分配给相应角色
+4. 创建或扩展对应的`CommandHandler`实现命令处理逻辑
+5. 在`LoggedInMenuState`的子菜单中添加菜单项
+6. 在`RbacFacade`中添加对应的外观方法(如需组合多个Service)
 
 ### 切换密码算法
-实现新的`PasswordEncoder`接口即可,系统支持运行时切换。
+实现新的`PasswordEncoder`接口,在`AuthService`和`UserService`中替换`Sha256PasswordEncoder`即可。
 
 ### 添加新资源类型
 在`Resource`表添加数据,权限通过`resource_id`关联。
@@ -219,37 +261,46 @@ executeInTransaction(conn -> {
 ## 运行示例
 
 ```
-╔════════════════════════════════════════╗
-║  RBAC CLI System - Access Control     ║
-╚════════════════════════════════════════╝
+==============================
+  RBAC CLI - Access Control  
+==============================
 
-Default admin credentials: admin / admin123
+Default admin: admin / admin123
 
-═══════ GUEST MENU ═══════
-  login  - Login to system
-  exit   - Exit application
-═══════════════════════════════════════
-Enter command: login
-Username: admin
-Password: admin123
+========== 游客菜单 ==========
+1. 登录系统
+0. 退出程序
+==========================
+请选择 [输入数字]: 1
 
-✓ Login successful! Welcome, admin
+用户名: admin
+密码: 
 
-═══════ MAIN MENU ═══════
-Logged in as: admin
+✓ 登录成功! 欢迎, admin
 
-Available Commands:
-  create-user          - Create new user
-  list-users           - List all users
-  view-user            - View user details
-  create-role          - Create new role
-  list-roles           - List all roles
-  assign-role          - Assign role to user
-  view-profile         - View own profile
-  change-password      - Change own password
-  logout               - Logout
-  exit                 - Exit application
-═══════════════════════════════════════
+========== 主菜单 ==========
+当前用户: admin
+
+1. 用户管理
+2. 角色管理
+3. 权限管理
+4. 资源管理
+5. 审计查询
+6. 账户管理
+0. 退出登录
+==========================
+请选择 [输入数字]: 1
+
+========== 用户管理 ==========
+1. 创建用户 (create-user)
+2. 查看用户列表 (list-users)
+3. 查看用户详情 (view-user)
+4. 修改用户 (update-user)
+5. 删除用户 (delete-user)
+6. 分配角色 (assign-role)
+7. 移除角色 (remove-role)
+0. 返回上级菜单
+==========================
 ```
 
 ## 总结

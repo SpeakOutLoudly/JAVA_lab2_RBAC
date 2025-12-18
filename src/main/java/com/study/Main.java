@@ -11,6 +11,7 @@ public class Main {
     public static void main(String[] args) {
         // Initialize database and facade
         DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+        dbConnection.initializeDefaults();
         RbacFacade facade = new RbacFacade(dbConnection);
 
         // Start CLI application

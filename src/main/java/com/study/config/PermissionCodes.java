@@ -10,6 +10,7 @@ public class PermissionCodes {
     public static final String USER_DELETE = "USER_DELETE";
     public static final String USER_VIEW = "USER_VIEW";
     public static final String USER_LIST = "USER_LIST";
+    public static final String CHANGE_PROFILE = "CHANGE_PROFILE";
     
     // Role management
     public static final String ROLE_CREATE = "ROLE_CREATE";

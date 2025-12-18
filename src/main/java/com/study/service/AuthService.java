@@ -4,7 +4,6 @@ import com.study.config.PermissionCodes;
 import com.study.context.SessionContext;
 import com.study.domain.Permission;
 import com.study.domain.User;
-import com.study.exception.DataNotFoundException;
 import com.study.exception.PermissionDeniedException;
 import com.study.exception.ValidationException;
 import com.study.repository.AuditLogRepository;
@@ -52,7 +51,7 @@ public class AuthService extends BaseService {
             },
             () -> {
                 User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new DataNotFoundException("User not found: " + username));
+                    .orElseThrow(() -> new ValidationException("User not found: " + username));
                 
                 if (!user.isEnabled()) {
                     throw new ValidationException("User account is disabled");
