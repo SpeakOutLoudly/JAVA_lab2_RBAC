@@ -273,7 +273,14 @@ public class PermissionRepository extends BaseRepository {
             pstmt.setString(5, scopeKey);
             pstmt.executeUpdate();
         } catch (SQLIntegrityConstraintViolationException e) {
-            throw new ValidationException("Scoped permission already exists for this role");
+            int errorCode = e.getErrorCode();
+            if (errorCode == 1062) { // duplicate key
+                throw new ValidationException("Scoped permission already exists for this role");
+            }
+            if (errorCode == 1452) { // foreign key constraint fails
+                throw new ValidationException("Role or permission not found for scoped permission");
+            }
+            throw new DataAccessException("Failed to assign scoped permission", e);
         } catch (SQLException e) {
             throw new DataAccessException("Failed to assign scoped permission", e);
         }

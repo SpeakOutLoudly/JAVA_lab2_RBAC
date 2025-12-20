@@ -227,6 +227,10 @@ public class PermissionService extends BaseService {
                     validateNotBlank(resourceType, "Resource type");
                 },
                 () -> {
+                    if (permissionRepository.findByCode(permissionCode).isEmpty()) {
+                        throw new ValidationException("Permission not found: " + permissionCode);
+                    }
+
                     String normalizedType = resourceType.trim().toUpperCase(Locale.ROOT);
                     String normalizedResourceId = resourceId == null ? null : resourceId.trim();
                     List<ScopedPermission> existing = permissionRepository.findScopedPermissionsByRoleId(roleId);

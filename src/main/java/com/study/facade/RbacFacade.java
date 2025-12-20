@@ -233,11 +233,31 @@ public class RbacFacade {
     public void assignScopedPermission(String roleCode, String permissionCode, String resourceType, String resourceId) {
         Role role = roleService.getRoleByCode(roleCode);
         permissionService.assignScopedPermissionToRole(role.getId(), permissionCode, resourceType, resourceId);
+
+        if (sessionContext.isLoggedIn()) {
+            User current = sessionContext.getCurrentUser();
+            java.util.List<Role> userRoles = roleRepository.findByUserId(current.getId());
+            boolean currentHasRole = userRoles.stream()
+                    .anyMatch(r -> r.getId().equals(role.getId()));
+            if (currentHasRole) {
+                authService.refreshCurrentUserPermissions();
+            }
+        }
     }
 
     public void removeScopedPermission(String roleCode, String permissionCode, String resourceType, String resourceId) {
         Role role = roleService.getRoleByCode(roleCode);
         permissionService.removeScopedPermissionFromRole(role.getId(), permissionCode, resourceType, resourceId);
+
+        if (sessionContext.isLoggedIn()) {
+            User current = sessionContext.getCurrentUser();
+            java.util.List<Role> userRoles = roleRepository.findByUserId(current.getId());
+            boolean currentHasRole = userRoles.stream()
+                    .anyMatch(r -> r.getId().equals(role.getId()));
+            if (currentHasRole) {
+                authService.refreshCurrentUserPermissions();
+            }
+        }
     }
 
     public List<ScopedPermission> getScopedPermissionsForRole(String roleCode) {

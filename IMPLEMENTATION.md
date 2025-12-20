@@ -75,6 +75,8 @@ RbacException (基类)
 - **role_permission_scopes表**: 存储角色的资源范围权限
 - **灵活授权**: 可授予全局权限或特定资源的权限
 - **细粒度控制**: resourceType + resourceId实现精确授权
+- **DTO支持**: ResourceAccessView, ResourceRoleScope, ResourceUserScope
+- **查询优化**: 支持批量查询(findByIds, findByTypes)
 
 ## 目录结构
 
@@ -82,17 +84,7 @@ RbacException (基类)
 src/main/java/com/study/
 ├── cli/
 │   ├── handler/
-│   │   ├── CommandHandler.java       # 命令处理器接口
-│   │   ├── AuthCommandHandler.java   # 认证相关命令
-│   │   ├── UserCommandHandler.java   # 用户管理命令
-│   │   ├── RoleCommandHandler.java   # 角色管理命令
-│   │   ├── PermissionCommandHandler.java  # 权限管理命令
-│   │   ├── ResourceCommandHandler.java    # 资源管理命令
-│   │   └── AuditCommandHandler.java  # 审计查询命令
-│   ├── state/
-│   │   ├── MenuState.java            # 菜单状态接口
-│   │   ├── GuestMenuState.java       # 登录前菜单
-│   │   └── LoggedInMenuState.java    # 登录后菜单
+│   │   └── CommandRouter.java       # 统一命令路由器(支持57个命令)
 │   └── CliApplication.java           # CLI应用主类
 ├── common/
 │   └── util/
@@ -136,9 +128,12 @@ src/main/java/com/study/
 │   ├── UserService.java              # 用户管理服务
 │   ├── RoleService.java              # 角色管理服务
 │   ├── PermissionService.java        # 权限管理服务
-│   ├── ResourceService.java          # 资源管理服务
+│   ├── ResourceService.java          # 资源管理服务(支持范围权限查询)
 │   ├── AuditService.java             # 审计查询服务
-│   └── （已移除，初始化内置在 DatabaseConnection.initializeDefaults）
+│   └── dto/                          # DTO包(新增)
+│       ├── ResourceAccessView.java   # 资源访问视图
+│       ├── ResourceRoleScope.java    # 角色范围权限
+│       └── ResourceUserScope.java    # 用户范围权限
 └── Main.java                         # 程序入口
 ```
 
@@ -213,21 +208,19 @@ executeInTransaction(conn -> {
 ## 设计模式应用
 
 1. **外观模式** - `RbacFacade`封装复杂子系统
-2. **状态模式** - `MenuState`管理登录前后菜单
+2. **命令模式** - `CommandRouter`统一路由管理(57个命令)
 3. **模板方法** - `BaseService.executeWithTemplate`固化执行流程
 4. **策略模式** - `PasswordEncoder`接口支持多种加密算法
-5. **命令模式** - `CommandHandler`接口及7个具体处理器
-6. **单例模式** - `DatabaseConnection`单例管理连接
+5. **单例模式** - `DatabaseConnection`单例管理连接
 
-## 扩展点
+### 扩展点
 
 ### 添加新命令
 1. 在`PermissionCodes`添加新权限常量
 2. 在`CommandSpec`添加新命令枚举
 3. 在`DatabaseConnection.initializeDefaults`初始化新权限并分配给相应角色
-4. 创建或扩展对应的`CommandHandler`实现命令处理逻辑
-5. 在`LoggedInMenuState`的子菜单中添加菜单项
-6. 在`RbacFacade`中添加对应的外观方法(如需组合多个Service)
+4. 在`CommandRouter`中注册命令处理逻辑
+5. 在`RbacFacade`中添加对应的外观方法(如需组合多个Service)
 
 ### 切换密码算法
 实现新的`PasswordEncoder`接口,在`AuthService`和`UserService`中替换`Sha256PasswordEncoder`即可。
@@ -261,46 +254,30 @@ executeInTransaction(conn -> {
 ## 运行示例
 
 ```
-==============================
-  RBAC CLI - Access Control  
-==============================
+欢迎使用 RBAC CLI 系统
+默认管理员: admin / admin123
 
-Default admin: admin / admin123
+输入命令 (输入 'help' 查看所有命令): login
 
-========== 游客菜单 ==========
-1. 登录系统
-0. 退出程序
-==========================
-请选择 [输入数字]: 1
+Username: admin
+Password: 
 
-用户名: admin
-密码: 
+[SUCCESS] Logged in as admin
 
-✓ 登录成功! 欢迎, admin
+输入命令 (输入 'help' 查看所有命令): help
 
-========== 主菜单 ==========
-当前用户: admin
-
-1. 用户管理
-2. 角色管理
-3. 权限管理
-4. 资源管理
-5. 审计查询
-6. 账户管理
-0. 退出登录
-==========================
-请选择 [输入数字]: 1
-
-========== 用户管理 ==========
-1. 创建用户 (create-user)
-2. 查看用户列表 (list-users)
-3. 查看用户详情 (view-user)
-4. 修改用户 (update-user)
-5. 删除用户 (delete-user)
-6. 分配角色 (assign-role)
-7. 移除角色 (remove-role)
-0. 返回上级菜单
-==========================
+== Commands ==
+help                         : Show available commands
+exit                         : Exit application
+login                        : Login
+logout                       : Logout
+change-password              : Change my password
+view-profile                 : View my profile
+create-user                  : Create user
+list-users                   : List users
+assign-resource-permission   : Grant scoped permission to role
+list-my-resources            : List my resources
+...
 ```
 
 ## 总结

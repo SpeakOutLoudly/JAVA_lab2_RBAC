@@ -43,11 +43,12 @@
 │  │ Service  │   │ Service  │   │ Service  │  │ Service  │  │
 │  └────┬─────┘   └────┬─────┘   └────┬─────┘  └────┬─────┘  │
 │       │              │              │             │         │
-│  ┌────┴─────┐   ┌───┴──────┐                              │
-│  │ Resource │   │  Audit   │                              │
-│  │ Service  │   │ Service  │                              │
-│  └────┬─────┘   └────┬─────┘                              │
-│       │              │              │             │         │
+│  ┌────┴─────┐   ┌───┴──────┐  ┌──────────────┐            │
+│  │ Resource │   │  Audit   │  │ DTO Package  │            │
+│  │ Service  │   │ Service  │  │ - ResourceAccessView     │
+│  └────┬─────┘   └────┬─────┘  │ - ResourceRoleScope      │
+│       │              │        │ - ResourceUserScope      │
+│       │              │        └──────────────┘            │
 │       └──────────────┴──────────────┴─────────────┘         │
 │                      │                                      │
 │              ┌───────▼───────┐                              │
@@ -68,10 +69,11 @@
 │  │  Repo  │  │  Repo  │  │   Repo   │  │   Repo   │        │
 │  └────┬───┘  └────┬───┘  └────┬─────┘  └────┬─────┘        │
 │       │           │           │             │               │
-│       │     ┌─────┴───────┐   │             │               │
-│       │     │  AuditLog   │   │             │               │
-│       │     │    Repo     │   │             │               │
-│       │     └─────┬───────┘   │             │               │
+│       │           │       ┌───┴─────────┐   │               │
+│       │     ┌─────┴───────┤ 资源范围权限  │   │               │
+│       │     │  AuditLog   │  查询支持    │   │               │
+│       │     │    Repo     ├─────────────┤   │               │
+│       │     └─────┬───────┴─────────────┘   │               │
 │       │           │           │             │               │
 │       └───────────┴───────────┴─────────────┘               │
 │                   │                                         │
@@ -88,11 +90,11 @@
 │  ┌────────┐  ┌────────┐  ┌───────────┐  ┌─────────────┐   │
 │  │ users  │  │ roles  │  │permissions│  │ resources   │   │
 │  └────────┘  └────────┘  └───────────┘  └─────────────┘   │
-│  ┌──────────┐  ┌─────────────┐  ┌──────────────────────┐  │
-│  │user_roles│  │role_perms   │  │role_permission_scopes│  │
-│  └──────────┘  └─────────────┘  └──────────────────────┘  │
-│  ┌──────────────┐                                          │
-│  │ audit_logs   │                                          │
+│  ┌──────────┐  ┌─────────────────┐  ┌──────────────────┐  │
+│  │user_roles│  │role_permissions │  │role_permission_  │  │
+│  └──────────┘  └─────────────────┘  │     scopes       │  │
+│  ┌──────────────┐                   └──────────────────┘  │
+│  │ audit_logs   │      (资源范围权限表: 支持细粒度权限控制)  │
 │  └──────────────┘                                          │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -352,21 +354,22 @@ CommandSpec 枚举结构:
 │ assign-role              │ Assign role          │ ROLE_ASSIGN  │
 │ remove-role              │ Remove role          │ ROLE_ASSIGN  │
 ├──────────────────────────┼──────────────────────┼──────────────┤
-│ create-permission        │ Create permission    │ PERM_CREATE  │
-│ list-permissions         │ List permissions     │ PERM_VIEW    │
-│ list-my-permissions      │ List my permissions  │ null         │
-│ update-permission        │ Update permission    │ PERM_UPDATE  │
-│ delete-permission        │ Delete permission    │ PERM_DELETE  │
-│ assign-permission        │ Assign permission    │ PERM_ASSIGN  │
-│ remove-permission        │ Remove permission    │ PERM_ASSIGN  │
-│ assign-resource-permission│ Grant scoped perm   │ RES_GRANT    │
-│ remove-resource-permission│ Revoke scoped perm  │ RES_GRANT    │
+│ create-permission        │ Create permission    │ PERMISSION_CREATE  │
+│ list-permissions         │ List permissions     │ PERMISSION_VIEW    │
+│ list-my-permissions      │ List my permissions  │ null              │
+│ update-permission        │ Update permission    │ PERMISSION_UPDATE  │
+│ delete-permission        │ Delete permission    │ PERMISSION_DELETE  │
+│ assign-permission        │ Assign permission    │ PERMISSION_ASSIGN  │
+│ remove-permission        │ Remove permission    │ PERMISSION_ASSIGN  │
+│ assign-resource-permission│ Grant scoped perm   │ RESOURCE_GRANT    │
+│ remove-resource-permission│ Revoke scoped perm  │ RESOURCE_GRANT    │
 ├──────────────────────────┼──────────────────────┼──────────────┤
-│ create-resource          │ Create resource      │ RES_CREATE   │
-│ list-resources           │ List resources       │ RES_LIST     │
-│ view-resource            │ View resource        │ RES_VIEW     │
-│ update-resource          │ Update resource      │ RES_UPDATE   │
-│ delete-resource          │ Delete resource      │ RES_DELETE   │
+│ create-resource          │ Create resource      │ RESOURCE_CREATE   │
+│ list-resources           │ List resources       │ RESOURCE_LIST     │
+│ list-my-resources        │ List my resources    │ null              │
+│ view-resource            │ View resource        │ RESOURCE_VIEW     │
+│ update-resource          │ Update resource      │ RESOURCE_UPDATE   │
+│ delete-resource          │ Delete resource      │ RESOURCE_DELETE   │
 ├──────────────────────────┼──────────────────────┼──────────────┤
 │ view-audit               │ View my audit        │ AUDIT_VIEW   │
 │ view-all-audit           │ View all audit       │ AUDIT_VIEW_ALL│
@@ -374,9 +377,10 @@ CommandSpec 枚举结构:
 │ view-action-audit        │ View action audit    │ AUDIT_VIEW_ALL│
 │ view-resource-audit      │ View resource audit  │ AUDIT_VIEW_ALL│
 ├──────────────────────────┼──────────────────────┼──────────────┤
-│ view-profile             │ View own profile     │ null         │
-│ change-password          │ Change password      │ null         │
-└──────────────────────────┴──────────────────────┴──────────────┘
+│ view-profile             │ View own profile     │ null              │
+│ change-password          │ Change password      │ null              │
+│ change-profile           │ Update profile info  │ CHANGE_PROFILE    │
+└──────────────────────────┴──────────────────────┴──────────────────┘
 
 Menu显示逻辑:
 for each CommandSpec:
@@ -428,6 +432,11 @@ try {
 CLI → RbacFacade → { AuthService, UserService, RoleService, 
      (简化接口)     PermissionService, ResourceService, AuditService }
                      (复杂子系统)
+
+职责分离:
+- CommandRouter: 命令路由和权限检查
+- RbacFacade: 用例级别的业务编排
+- Service层: 具体业务逻辑实现
 ```
 
 ### 7.2 状态模式 (State)
@@ -446,10 +455,15 @@ MenuState接口
 ### 7.3 模板方法 (Template Method)
 ```
 BaseService.executeWithTemplate()
-├─ checkPermission()    (hook)
+├─ checkPermission()    (hook: 支持资源范围权限检查)
 ├─ validation()         (hook)
 ├─ execution()          (abstract)
 └─ audit()              (hook)
+
+资源范围权限检查:
+- 全局权限: 直接检查权限代码
+- 范围权限: 检查 resourceType + resourceId 匹配
+- 优先级: 全局权限 > 范围权限
 ```
 
 ### 7.4 策略模式 (Strategy)
@@ -461,13 +475,19 @@ PasswordEncoder接口
 
 ### 7.5 命令模式 (Command)
 ```
-CommandHandler接口
-├─ AuthCommandHandler (认证相关)
-├─ UserCommandHandler (用户管理)
-├─ RoleCommandHandler (角色管理)
-├─ PermissionCommandHandler (权限管理)
-├─ ResourceCommandHandler (资源管理)
-└─ AuditCommandHandler (审计查询)
+CommandRouter (统一命令路由)
+├─ 用户认证命令 (login, logout, change-password等)
+├─ 用户管理命令 (create-user, list-users等)
+├─ 角色管理命令 (create-role, assign-role等)
+├─ 权限管理命令 (create-permission, assign-permission等)
+├─ 资源范围权限命令 (assign-resource-permission等)
+├─ 资源管理命令 (create-resource, list-my-resources等)
+└─ 审计查询命令 (view-audit, view-all-audit等)
+
+命令注册模式:
+- Map<String, Command> 存储命令
+- 统一权限检查和路由
+- Consumer<RbacFacade> 执行命令
 ```
 
 ## 8. 关键设计决策
@@ -491,26 +511,31 @@ CommandHandler接口
 - **日志分离**: 审计入库 + 运行日志文件
 
 ### 8.4 密码安全
-- **算法**: SHA-256
-- **加固**: 随机salt (每用户独立)
+- **算法**: SHA-256 (Sha256PasswordEncoder)
+- **加固**: 随机salt (每用户独立,16字节)
 - **存储**: 只存hash + salt,明文不落地
 - **验证**: hash(input + salt) == stored_hash
+- **接口化**: PasswordEncoder接口,支持策略模式扩展
 
 ## 9. 性能优化点
 
-1. **权限缓存** - 减少数据库查询
-2. **连接池** - DatabaseConnection单例
-3. **PreparedStatement** - 防SQL注入+性能
-4. **索引** - username, code等常查字段
+1. **权限缓存** - 减少数据库查询(全局+范围权限)
+2. **连接池** - DatabaseConnection单例管理
+3. **PreparedStatement** - 防SQL注入+预编译性能提升
+4. **索引** - username, code等常查字段建立索引
 5. **事务批处理** - 组合操作一次提交
+6. **批量查询优化** - findByIds/findByTypes支持IN查询
+7. **DTO聚合查询** - ResourceAccessView减少多次查询
 
 ## 10. 扩展性设计
 
 ### 10.1 水平扩展
 - Repository接口化 → 可切换数据源(当前MySQL,可切换PostgreSQL等)
-- PasswordEncoder接口化 → 可切换加密算法
-- CommandSpec枚举化 → 易于添加新命令
-- CommandHandler接口化 → 易于扩展新命令处理器
+- PasswordEncoder接口化 → 可切换加密算法(当前SHA-256)
+- CommandSpec枚举化 → 易于添加新命令(57个命令支持)
+- CommandRouter统一路由 → 命令注册机制,易扩展
+- DTO包独立 → 支持复杂查询结果封装
+- 资源范围权限 → 支持细粒度权限控制扩展
 
 ### 10.2 垂直扩展
 - BaseService模板 → 新Service继承即可

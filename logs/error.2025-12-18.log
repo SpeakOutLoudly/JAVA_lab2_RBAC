@@ -1,0 +1,140 @@
+2025-12-18 12:56:37.427 [main] ERROR c.s.repository.DatabaseConnection - Failed to initialize database
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:438)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:241)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:189)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:682)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:230)
+	at com.study.repository.DatabaseConnection.getConnection(DatabaseConnection.java:43)
+	at com.study.repository.DatabaseConnection.initializeDatabase(DatabaseConnection.java:47)
+	at com.study.repository.DatabaseConnection.<init>(DatabaseConnection.java:28)
+	at com.study.repository.DatabaseConnection.getInstance(DatabaseConnection.java:33)
+	at com.study.Main.main(Main.java:13)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:104)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:149)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:165)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:88)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:120)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:935)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:805)
+	... 10 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:589)
+	at java.base/sun.nio.ch.Net.connect(Net.java:578)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:583)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:62)
+	... 13 common frames omitted
+2025-12-18 12:57:09.107 [main] ERROR c.s.repository.DatabaseConnection - Failed to initialize database
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:438)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:241)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:189)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:682)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:230)
+	at com.study.repository.DatabaseConnection.getConnection(DatabaseConnection.java:43)
+	at com.study.repository.DatabaseConnection.initializeDatabase(DatabaseConnection.java:47)
+	at com.study.repository.DatabaseConnection.<init>(DatabaseConnection.java:28)
+	at com.study.repository.DatabaseConnection.getInstance(DatabaseConnection.java:33)
+	at com.study.Main.main(Main.java:13)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:104)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:149)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:165)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:88)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:120)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:935)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:805)
+	... 10 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:589)
+	at java.base/sun.nio.ch.Net.connect(Net.java:578)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:583)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:62)
+	... 13 common frames omitted
+2025-12-18 12:57:34.370 [main] ERROR c.s.repository.DatabaseConnection - Failed to initialize database
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:438)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:241)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:189)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:682)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:230)
+	at com.study.repository.DatabaseConnection.getConnection(DatabaseConnection.java:43)
+	at com.study.repository.DatabaseConnection.initializeDatabase(DatabaseConnection.java:47)
+	at com.study.repository.DatabaseConnection.<init>(DatabaseConnection.java:28)
+	at com.study.repository.DatabaseConnection.getInstance(DatabaseConnection.java:33)
+	at com.study.Main.main(Main.java:13)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:104)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:149)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:165)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:88)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:120)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:935)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:805)
+	... 10 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:589)
+	at java.base/sun.nio.ch.Net.connect(Net.java:578)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:583)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:62)
+	... 13 common frames omitted
+2025-12-18 13:10:19.934 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=REMOVE_PERMISSION, resourceType=RolePermission, resourceId=2-1, error=Role does not have this permission
+2025-12-18 14:55:13.843 [main] ERROR com.study.service.UserService - Failed to execute operation, action=VIEW_USER, resourceType=User, resourceId=1, error=User not found: 1
+2025-12-18 15:20:09.016 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=HAVE_BOOK, error=Role not found: HAVE_BOOK
+2025-12-18 15:20:42.183 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=ASSIGN_SCOPED_PERMISSION, resourceType=1, resourceId=null, error=Scoped permission already exists for this role
+2025-12-18 17:37:03.915 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=ASSIGN_SCOPED_PERMISSION, resourceType=1, resourceId=1, error=Scoped permission already exists for this role
+2025-12-18 17:37:32.209 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=ASSIGN_SCOPED_PERMISSION, resourceType=1, resourceId=1, error=Scoped permission already exists for this role
+2025-12-18 17:55:35.675 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=HAVE_BOOK, error=Role not found: HAVE_BOOK
+2025-12-18 17:56:54.421 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=VIEW_PERMISSION, resourceType=Permission, resourceId=HAVE_CPU, error=Permission not found: HAVE_CPU
+2025-12-18 17:57:05.327 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=HAVE_GPU, error=Role not found: HAVE_GPU
+2025-12-18 18:27:41.120 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-18 19:10:13.205 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=admin, error=Invalid password
+2025-12-18 19:23:36.095 [main] ERROR com.study.service.RoleService - Failed to execute operation, action=VIEW_ROLE, resourceType=Role, resourceId=1, error=Role not found: 1
+2025-12-18 19:23:53.642 [main] ERROR com.study.service.PermissionService - Failed to execute operation, action=REMOVE_SCOPED_PERMISSION, resourceType=1, resourceId=null, error=Scoped permission not found for role
+2025-12-18 20:53:14.590 [main] ERROR com.study.service.AuthService - Failed to execute operation, action=LOGIN, resourceType=User, resourceId=test, error=User not found: test

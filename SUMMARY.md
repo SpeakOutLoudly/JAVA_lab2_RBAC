@@ -223,29 +223,30 @@ public class Sha256PasswordEncoder implements PasswordEncoder {
 ## 代码统计
 
 ### 文件数量
-- CLI层: 11个(1个主应用 + 3个状态 + 7个处理器)
+- CLI层: 2个(1个主应用 + 1个CommandRouter统一路由)
 - Common工具: 1个
 - Domain实体: 6个(含ScopedPermission)
 - Exception类: 6个
 - Repository类: 7个(含ResourceRepository)
-- Service类: 8个(含ResourceService, AuditService)
+- Service类: 7个(含ResourceService, AuditService)
+- DTO类: 3个(新增ResourceAccessView, ResourceRoleScope, ResourceUserScope)
 - Security类: 3个
 - Config类: 2个
 - Facade类: 1个
 - Main入口: 1个
 
-**总计**: 约46个核心类
+**总计**: 约39个核心类
 
 ### 代码行数(估算)
-- CLI层: ~800行(CliApplication + States + Handlers)
+- CLI层: ~600行(CliApplication + CommandRouter)
 - Common层: ~100行
-- Domain层: ~600行(含ScopedPermission)
-- Repository层: ~1200行(含ResourceRepository + 范围权限)
-- Service层: ~1200行(8个Service)
-- Facade层: ~300行
+- Domain层: ~600行(6个实体类)
+- Repository层: ~1500行(7个Repo + 范围权限查询)
+- Service层: ~1500行(7个Service + 3个DTO)
+- Facade层: ~500行
 - 配置+工具: ~400行
 
-**总计**: 约4600+行生产代码
+**总计**: 约5200+行生产代码
 
 ---
 
@@ -260,11 +261,10 @@ public class Sha256PasswordEncoder implements PasswordEncoder {
 
 ### 设计模式
 1. **外观模式** - RbacFacade
-2. **状态模式** - MenuState(Guest/LoggedIn)
+2. **命令模式** - CommandRouter统一路由
 3. **模板方法** - BaseService统一流程
 4. **策略模式** - PasswordEncoder接口
-5. **命令模式** - CommandHandler接口及7个实现
-6. **单例模式** - DatabaseConnection
+5. **单例模式** - DatabaseConnection
 
 ---
 
@@ -301,32 +301,22 @@ mvn exec:java -Dexec.mainClass="com.study.Main"
 src/main/java/com/study/
 ├── cli/
 │   ├── handler/
-│   │   ├── CommandHandler.java
-│   │   ├── AuthCommandHandler.java
-│   │   ├── UserCommandHandler.java
-│   │   ├── RoleCommandHandler.java
-│   │   ├── PermissionCommandHandler.java
-│   │   ├── ResourceCommandHandler.java
-│   │   └── AuditCommandHandler.java
-│   ├── state/
-│   │   ├── MenuState.java
-│   │   ├── GuestMenuState.java
-│   │   └── LoggedInMenuState.java
+│   │   └── CommandRouter.java       # 统一命令路由器
 │   └── CliApplication.java
 ├── common/
 │   └── util/
 │       └── InputUtils.java
 ├── config/
-│   ├── CommandSpec.java
-│   └── PermissionCodes.java
+│   ├── CommandSpec.java         # 命令规格(命令-权限映射,57个命令)
+│   └── PermissionCodes.java     # 权限代码常量
 ├── context/
-│   └── SessionContext.java
+│   └── SessionContext.java      # 会话上下文(用户+全局权限+范围权限缓存)
 ├── domain/
 │   ├── AuditLog.java
 │   ├── Permission.java
 │   ├── Resource.java
 │   ├── Role.java
-│   ├── ScopedPermission.java
+│   ├── ScopedPermission.java    # 资源范围权限
 │   └── User.java
 ├── exception/
 │   ├── DataNotFoundException.java
@@ -353,11 +343,14 @@ src/main/java/com/study/
 │   ├── AuditService.java
 │   ├── AuthService.java
 │   ├── BaseService.java
-│   ├── （初始化已集成在 DatabaseConnection.initializeDefaults）
 │   ├── PermissionService.java
 │   ├── ResourceService.java
 │   ├── RoleService.java
-│   └── UserService.java
+│   ├── UserService.java
+│   └── dto/                     # DTO包(新增)
+│       ├── ResourceAccessView.java
+│       ├── ResourceRoleScope.java
+│       └── ResourceUserScope.java
 └── Main.java
 ```
 
@@ -380,9 +373,9 @@ src/main/resources/
 
 ### 1. 架构清晰
 - 严格的分层架构(CLI+Facade+Service+Repository)
-- 职责明确(State管菜单,Handler处理命令,Service执行业务)
+- 职责明确(CommandRouter命令路由,Facade编排调用,Service业务实现)
 - 低耦合高内聚
-- 命令模式实现命令处理器解耦
+- 命令模式实现命令管理解耦(57个命令)
 - 资源范围权限支持细粒度控制
 
 ### 2. 代码质量
@@ -397,17 +390,18 @@ src/main/resources/
 - 数据脱敏处理
 
 ### 4. 可维护性
-- 设计模式应用得当(外观、状态、模板、策略、命令、单例)
+- 设计模式应用得当(外观、命令、模板、策略、单例)
 - 接口抽象清晰
-- 配置化管理(CommandSpec枚举)
-- 命令处理器可独立扩展
+- 配置化管理(CommandSpec枚举,57个命令)
+- CommandRouter统一路由,易扩展
+- DTO包支持复杂查询结果封装
 - 支持资源范围权限
 
 ### 5. 用户体验
-- 层级菜单导航(主菜单+6个子菜单)
-- 数字化操作,简单直观
+- 命令行交互模式(直接输入命令)
+- help命令显示可用命令列表
 - 友好的错误提示
-- 权限驱动的菜单显示
+- 权限驱动的命令显示
 - 动态权限过滤
 
 ---
@@ -440,11 +434,11 @@ src/main/resources/
 
 本项目完整实现了建议的所有11项改进点,是一个**生产级别**的RBAC系统实现:
 
-✅ **架构完整** - 分层清晰,职责明确,CLI层采用状态+命令模式
+✅ **架构完整** - 分层清晰,职责明确,CLI层采用命令模式
 ✅ **安全可靠** - 加密存储,权限控制,审计完善,资源范围权限
-✅ **易于扩展** - 6种设计模式,接口抽象,配置化,CommandHandler可扩展
-✅ **代码规范** - 统一风格,异常处理,日志记录,~4600行生产代码
+✅ **易于扩展** - 5种设计模式,接口抽象,配置化,CommandRouter可扩展
+✅ **代码规范** - 统一风格,异常处理,日志记录,~5200行生产代码
 ✅ **开箱即用** - 自动初始化,默认数据,启动脚本,MySQL数据库
-✅ **交互友好** - 层级菜单,数字导航,权限驱动显示
+✅ **交互友好** - 命令行交互,help命令,权限驱动显示
 
 可以直接用于学习RBAC设计、Java最佳实践,或作为实际项目的基础框架。
